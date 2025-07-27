@@ -29,7 +29,7 @@ classifiers = [
     "Topic :: Utilities",
     "Typing :: Typed",
 ]
-dependencies = []
+dependencies = ["geopandas"]
 
 [project.urls]
 Homepage = "https://csiro-hydroinformatics.github.io/geosdhydro"
@@ -38,8 +38,8 @@ Changelog = "https://csiro-hydroinformatics.github.io/geosdhydro/changelog"
 Repository = "https://github.com/csiro-hydroinformatics/geosdhydro"
 Issues = "https://github.com/csiro-hydroinformatics/geosdhydro/issues"
 Discussions = "https://github.com/csiro-hydroinformatics/geosdhydro/discussions"
-Gitter = "https://gitter.im/csiro-hydroinformatics/geosdhydro"
-Funding = "https://github.com/sponsors/jmp75"
+# Gitter = "https://gitter.im/csiro-hydroinformatics/geosdhydro"
+# Funding = "https://github.com/sponsors/jmp75"
 
 [project.scripts]
 geosdhydro = "geosdhydro.cli:main"
