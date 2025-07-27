@@ -87,7 +87,7 @@ class ShapefileToSwiftConverter:
 
         nodes = []
         for node_id in sorted(unique_nodes):
-            node = {
+            node:Dict[str,Any] = {
                 "ErrorCorrection": {"ErrorCorrectionType": "NoErrorCorrection"},
                 "ID": str(node_id),
                 "Name": f"Node_{node_id}",
