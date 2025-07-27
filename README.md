@@ -9,12 +9,28 @@ GIS tools for semi-distributed hydrologic modelling
 
 ## Installation
 
+You may use [`uv`](https://docs.astral.sh/uv/) (recommended) to manage venvs and install packages. Optional.
+
 ```bash
 pip install geosdhydro
+# uv pip install geosdhydro
 ```
 
-With [`uv`](https://docs.astral.sh/uv/):
+To install from the latest git main branch:
+
+```bash
+pip install git+https://github.com/csiro-hydroinformatics/geosdhydro@main
+# uv pip install git+https://github.com/csiro-hydroinformatics/geosdhydro@main
+```
+
+<!-- With [`uv`](https://docs.astral.sh/uv/):
 
 ```bash
 uv tool install geosdhydro
-```
+``` -->
+
+## Usage
+
+See the documentation link above for sample notebook(s).
+
+There may be some command line features also available in the future, TBC.
