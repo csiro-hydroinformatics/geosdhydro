@@ -1,0 +1,12 @@
+# geosdhydro
+
+> GIS tools for semi-distributed hydrologic modelling
+
+## Usage
+
+- [Overview](https://csiro-hydroinformatics.github.io/geosdhydro/index.md)
+
+## API
+
+- [API reference](https://csiro-hydroinformatics.github.io/geosdhydro/reference/api/index.md)
+
