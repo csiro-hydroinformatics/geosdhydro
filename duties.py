@@ -184,6 +184,25 @@ def release(ctx: Context, version: str = "") -> None:
     ctx.run("git push --tags", title="Pushing tags", pty=False)
 
 
+
+@duty
+def tag(ctx: Context, version: str = "") -> None:
+    """Tag a new version.
+
+    This will not trigger a release on pypi, unlike make release
+
+    Parameters:
+        version: The new version number to use.
+    """
+    if not (version := (version or input("> Version to release: ")).strip()):
+        ctx.run("false", title="A version must be provided")
+    ctx.run("git add pyproject.toml CHANGELOG.md", title="Staging files", pty=PTY)
+    ctx.run(["git", "commit", "-m", f"chore: Prepare release {version}"], title="Committing changes", pty=PTY)
+    ctx.run(f"git tag {version}", title="Tagging commit", pty=PTY)
+    ctx.run("git push", title="Pushing commits", pty=False)
+    ctx.run("git push --tags", title="Pushing tags", pty=False)
+
+
 @duty(silent=True, aliases=["cov"])
 def coverage(ctx: Context) -> None:
     """Report coverage as text and HTML."""
