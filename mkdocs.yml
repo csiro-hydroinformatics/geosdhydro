@@ -19,6 +19,8 @@ nav:
   - Changelog: changelog.md
   - Credits: credits.md
   - License: license.md
+- Examples:
+  - SWIFT JSON: nb/basic_usage.ipynb
 - API reference: reference/api.md
 - Development:
   - Contributing: contributing.md
