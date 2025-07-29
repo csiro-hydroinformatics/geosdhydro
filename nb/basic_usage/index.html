@@ -571,6 +571,19 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Generating swift catchment structure
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -582,6 +595,34 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#checking-the-json-output-loads-as-a-catchment-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      Checking the json output loads as a catchment structure
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -755,6 +796,23 @@
   
     
   
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#checking-the-json-output-loads-as-a-catchment-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      Checking the json output loads as a catchment structure
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
   
 </nav>
                   </div>
@@ -1228,7 +1286,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h1 id="generating-swift-catchment-structure">Generating swift catchment structure<a class="anchor-link" href="#generating-swift-catchment-structure">¶</a></h1>
+<h1 id="generating-swift-catchment-structure">Generating swift catchment structure<a class="anchor-link" href="#generating-swift-catchment-structure">¶</a></h1><p>This is a sample notebook demonstrating how to use the <code>geosdhydro</code> package to convert a geopandas dataframe to a swift json file. A browsable form of this notebook should be at the <a href="https://csiro-hydroinformatics.github.io/geosdhydro/">package documentation</a>.</p>
 </div>
 </div>
 </div>
@@ -1463,14 +1521,25 @@ print(link_specs.head())</div>
  'SWIFT_ID': dtype('int32'),
  'ToNodeID2': dtype('int64'),
  'DArea2': dtype('float64'),
- 'geometry': &lt;geopandas.array.GeometryDtype at 0x7f986ff22120&gt;}</pre>
+ 'geometry': &lt;geopandas.array.GeometryDtype at 0x7fc22562dfd0&gt;}</pre>
 </div>
 </div>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=06b9af41-89ec-4d10-8658-e33d369c43fd">
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=2a494ff3-1e61-4d8c-a5c1-2633e041c58a">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p>Note that some of the input columns, LinkID, ToNodeID, FromNodeID, are integers, because of habits. It is preferable to have them as strings, but the converter will transparently convert them to string. Another thing is that there is a duplicated ID in the links:</p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=5b4cd253-06e9-410b-bc1a-931c6dc32f8b">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -1488,16 +1557,52 @@ print(link_specs.head())</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">geosdhydro.swift</span><span class="w"> </span><span class="kn">import</span> <span class="n">ShapefileToSwiftConverter</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">gdf</span> <span class="o">=</span> <span class="n">link_specs</span>
+<span class="c1"># Check for duplicates in the 'LinkID' column</span>
+<span class="n">duplicates</span> <span class="o">=</span> <span class="n">gdf</span><span class="p">[</span><span class="s1">'LinkID'</span><span class="p">][</span><span class="n">gdf</span><span class="p">[</span><span class="s1">'LinkID'</span><span class="p">]</span><span class="o">.</span><span class="n">duplicated</span><span class="p">(</span><span class="n">keep</span><span class="o">=</span><span class="kc">False</span><span class="p">)]</span>
+
+<span class="c1"># Display the duplicated IDs</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">duplicates</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-7">from geosdhydro.swift import ShapefileToSwiftConverter</div>
+<div class="clipboard-copy-txt" id="cell-7">gdf = link_specs
+# Check for duplicates in the 'LinkID' column
+duplicates = gdf['LinkID'][gdf['LinkID'].duplicated(keep=False)]
+
+# Display the duplicated IDs
+print(duplicates)</div>
 </div>
 </div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>3     17
+17    17
+Name: LinkID, dtype: int64
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=da905c86-612b-495e-8b82-4c9ddd04388c">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p>Let's see what happens:</p>
 </div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=b22de211-0f1a-41e7-bab7-b41eac0f090a">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=06b9af41-89ec-4d10-8658-e33d369c43fd">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -1515,19 +1620,16 @@ print(link_specs.head())</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">converter</span> <span class="o">=</span> <span class="n">ShapefileToSwiftConverter</span><span class="p">(</span><span class="n">link_specs</span><span class="p">)</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">converter</span><span class="o">.</span><span class="n">convert</span><span class="p">()</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">geosdhydro</span><span class="w"> </span><span class="kn">import</span> <span class="n">ShapefileToSwiftConverter</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-8">converter = ShapefileToSwiftConverter(link_specs)
-result = converter.convert()
-</div>
+<div class="clipboard-copy-txt" id="cell-8">from geosdhydro import ShapefileToSwiftConverter</div>
 </div>
 </div>
 </div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=c2126950-6096-492b-9b39-4cedd5b79abd">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=64b87d27-f744-427c-9672-941df74fe04a">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -1545,9 +1647,64 @@ result = converter.convert()
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="sa">f</span><span class="s2">"there are </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s2">"Links"</span><span class="p">])</span><span class="si">}</span><span class="s2"> links, </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s2">"Nodes"</span><span class="p">])</span><span class="si">}</span><span class="s2"> nodes, </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s2">"SubAreas"</span><span class="p">])</span><span class="si">}</span><span class="s2"> subareas"</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">converter</span> <span class="o">=</span> <span class="n">ShapefileToSwiftConverter</span><span class="p">(</span><span class="n">link_specs</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-9">f"there are {len(result["Links"])} links, {len(result["Nodes"])} nodes, {len(result["SubAreas"])} subareas"</div>
+<div class="clipboard-copy-txt" id="cell-9">converter = ShapefileToSwiftConverter(link_specs)</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
+<pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">ValueError</span>                                Traceback (most recent call last)
+<span class="ansi-cyan-fg">Cell</span><span class="ansi-cyan-fg"> </span><span class="ansi-green-fg">In[9]</span><span class="ansi-green-fg">, line 1</span>
+<span class="ansi-green-fg">----&gt; </span><span class="ansi-green-fg">1</span> converter = <span class="ansi-yellow-bg">ShapefileToSwiftConverter</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">link_specs</span><span class="ansi-yellow-bg">)</span>
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">~/src/geosdhydro/src/geosdhydro/_internal/swift.py:21</span>, in <span class="ansi-cyan-fg">ShapefileToSwiftConverter.__init__</span><span class="ansi-blue-fg">(self, gdf, include_coordinates)</span>
+<span class="ansi-green-fg">     19</span> <span style="color: rgb(0,135,0)">self</span>.gdf = gdf
+<span class="ansi-green-fg">     20</span> <span style="color: rgb(0,135,0)">self</span>.include_coordinates = include_coordinates
+<span class="ansi-green-fg">---&gt; </span><span class="ansi-green-fg">21</span> <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">_check_geodf</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">)</span>
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">~/src/geosdhydro/src/geosdhydro/_internal/swift.py:76</span>, in <span class="ansi-cyan-fg">ShapefileToSwiftConverter._check_geodf</span><span class="ansi-blue-fg">(self)</span>
+<span class="ansi-green-fg">     74</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span class="ansi-bold" style="color: rgb(175,0,255)">not</span> duplicates.empty:
+<span class="ansi-green-fg">     75</span>     duplicate_indices = <span style="color: rgb(0,135,0)">self</span>.gdf[<span style="color: rgb(0,135,0)">self</span>.gdf[<span class="ansi-yellow-fg">"</span><span class="ansi-yellow-fg">LinkID</span><span class="ansi-yellow-fg">"</span>].isin(duplicates.index)].index.tolist()
+<span class="ansi-green-fg">---&gt; </span><span class="ansi-green-fg">76</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">raise</span> <span class="ansi-bold" style="color: rgb(215,95,95)">ValueError</span>(<span class="ansi-yellow-fg">f</span><span class="ansi-yellow-fg">"</span><span class="ansi-yellow-fg">Column </span><span class="ansi-yellow-fg">'</span><span class="ansi-yellow-fg">LinkID</span><span class="ansi-yellow-fg">'</span><span class="ansi-yellow-fg"> contains duplicate values: </span><span class="ansi-bold" style="color: rgb(175,95,135)">{</span>duplicates.index.tolist()<span class="ansi-bold" style="color: rgb(175,95,135)">}</span><span class="ansi-yellow-fg"> at indices </span><span class="ansi-bold" style="color: rgb(175,95,135)">{</span>duplicate_indices<span class="ansi-bold" style="color: rgb(175,95,135)">}</span><span class="ansi-yellow-fg">.</span><span class="ansi-yellow-fg">"</span>)
+
+<span class="ansi-red-fg">ValueError</span>: Column 'LinkID' contains duplicate values: ['17'] at indices [3, 17].</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=44921d4e-6253-4c99-8928-b0cce60fb440">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [10]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="CodeMirror cm-s-jupyter">
+<div class="zeroclipboard-container">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-10">
+<div>
+<span class="notice" hidden="">Copied!</span>
+<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
+<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+</clipboard-copy>
+</div>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">link_specs</span><span class="o">.</span><span class="n">iloc</span><span class="p">[[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">17</span><span class="p">]]</span>
+</pre></div>
+<div class="clipboard-copy-txt" id="cell-10">link_specs.iloc[[3, 17]]</div>
 </div>
 </div>
 </div>
@@ -1557,9 +1714,218 @@ result = converter.convert()
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[9]:</div>
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[10]:</div>
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html" tabindex="0">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>OBJECTID</th>
+<th>Shape_Leng</th>
+<th>LinkID</th>
+<th>FromNodeID</th>
+<th>ToNodeID</th>
+<th>HeadLink</th>
+<th>SPathCnt</th>
+<th>LPathCnt</th>
+<th>SPathLen</th>
+<th>LPathLen</th>
+<th>DArea</th>
+<th>Prim_Link</th>
+<th>SWIFT_ID</th>
+<th>ToNodeID2</th>
+<th>DArea2</th>
+<th>geometry</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>3</th>
+<td>17</td>
+<td>0.135098</td>
+<td>17</td>
+<td>43636314</td>
+<td>43346081</td>
+<td>0</td>
+<td>14</td>
+<td>14</td>
+<td>34835.592042</td>
+<td>34835.592042</td>
+<td>1.0</td>
+<td>0</td>
+<td>1802</td>
+<td>0</td>
+<td>-1.0</td>
+<td>LINESTRING (149.41821 -34.04389, 149.31528 -33...</td>
+</tr>
+<tr>
+<th>17</th>
+<td>17</td>
+<td>0.128853</td>
+<td>17</td>
+<td>43351601</td>
+<td>43349393</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1.000000</td>
+<td>0.000000</td>
+<td>145644000.0</td>
+<td>1</td>
+<td>55</td>
+<td>43349393</td>
+<td>145644000.0</td>
+<td>LINESTRING (149.42191 -33.79131, 149.38417 -33...</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=a3b3f6cf-3529-45aa-a5fd-375d4a447d5b">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p>Not quite sure what was intended with the above. One of the entry has 1 meter-length links <code>SPathLen</code>, but a catchment area, the other is the other way around. I may have been a legacy workaround, or a data bug. Be it as it may, this is a useful way to illustrate the need to look at data, and the build-in checks in the package/features.</p>
+<p>For the sake of the example, let us just drop these.</p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=8ac0218f-ee54-458b-a1fc-c3c7b062ba59">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [11]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="CodeMirror cm-s-jupyter">
+<div class="zeroclipboard-container">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-11">
+<div>
+<span class="notice" hidden="">Copied!</span>
+<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
+<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+</clipboard-copy>
+</div>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">link_specs</span> <span class="o">=</span> <span class="n">link_specs</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">17</span><span class="p">])</span>
+</pre></div>
+<div class="clipboard-copy-txt" id="cell-11">link_specs = link_specs.drop(index=[3,17])</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=458a8993-7588-41ba-9b11-527d4190a008">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [12]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="CodeMirror cm-s-jupyter">
+<div class="zeroclipboard-container">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-12">
+<div>
+<span class="notice" hidden="">Copied!</span>
+<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
+<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+</clipboard-copy>
+</div>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">converter</span> <span class="o">=</span> <span class="n">ShapefileToSwiftConverter</span><span class="p">(</span><span class="n">link_specs</span><span class="p">)</span>
+</pre></div>
+<div class="clipboard-copy-txt" id="cell-12">converter = ShapefileToSwiftConverter(link_specs)</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=5600ba1b-2b65-4703-9ed4-f3f9907f7127">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [13]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="CodeMirror cm-s-jupyter">
+<div class="zeroclipboard-container">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-13">
+<div>
+<span class="notice" hidden="">Copied!</span>
+<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
+<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+</clipboard-copy>
+</div>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">converter</span><span class="o">.</span><span class="n">convert</span><span class="p">()</span>
+</pre></div>
+<div class="clipboard-copy-txt" id="cell-13">result = converter.convert()</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=c2126950-6096-492b-9b39-4cedd5b79abd">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [14]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="CodeMirror cm-s-jupyter">
+<div class="zeroclipboard-container">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-14">
+<div>
+<span class="notice" hidden="">Copied!</span>
+<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
+<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+</clipboard-copy>
+</div>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="sa">f</span><span class="s2">"there are </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s2">"Links"</span><span class="p">])</span><span class="si">}</span><span class="s2"> links, </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s2">"Nodes"</span><span class="p">])</span><span class="si">}</span><span class="s2"> nodes, </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s2">"SubAreas"</span><span class="p">])</span><span class="si">}</span><span class="s2"> subareas"</span>
+</pre></div>
+<div class="clipboard-copy-txt" id="cell-14">f"there are {len(result["Links"])} links, {len(result["Nodes"])} nodes, {len(result["SubAreas"])} subareas"</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[14]:</div>
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
-<pre>'there are 29 links, 30 nodes, 17 subareas'</pre>
+<pre>'there are 27 links, 29 nodes, 16 subareas'</pre>
 </div>
 </div>
 </div>
@@ -1582,10 +1948,10 @@ result = converter.convert()
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [10]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [15]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-10">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-15">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -1597,7 +1963,7 @@ result = converter.convert()
 </div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-10">import json</div>
+<div class="clipboard-copy-txt" id="cell-15">import json</div>
 </div>
 </div>
 </div>
@@ -1609,10 +1975,10 @@ result = converter.convert()
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [11]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [17]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-11">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-16">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -1626,12 +1992,23 @@ result = converter.convert()
 <span class="c1"># with open(fp, "w") as f:</span>
 <span class="c1">#     json.dump(result, f, indent=2)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-11">fp = Path.home() / "tmp" / "abercrombie_swift.json"
+<div class="clipboard-copy-txt" id="cell-16">fp = Path.home() / "tmp" / "abercrombie_swift.json"
 # with open(fp, "w") as f:
 #     json.dump(result, f, indent=2)
 </div>
 </div>
 </div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=0520feea-d1dd-486a-b45b-0721943dd5ad">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h2 id="checking-the-json-output-loads-as-a-catchment-structure">Checking the json output loads as a catchment structure<a class="anchor-link" href="#checking-the-json-output-loads-as-a-catchment-structure">¶</a></h2>
 </div>
 </div>
 </div>
@@ -1641,10 +2018,43 @@ result = converter.convert()
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [18]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="CodeMirror cm-s-jupyter">
+<div class="zeroclipboard-container">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-17">
+<div>
+<span class="notice" hidden="">Copied!</span>
+<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
+<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+</clipboard-copy>
+</div>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># This is be done if you have `swift2` in your python env using:</span>
+
+<span class="c1"># from swift2.model_definitions import model_from_json_file</span>
+<span class="c1"># sim = model_from_json_file(fp)</span>
+</pre></div>
+<div class="clipboard-copy-txt" id="cell-17"># This is be done if you have `swift2` in your python env using:
+
+# from swift2.model_definitions import model_from_json_file
+# sim = model_from_json_file(fp)</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=49535960-b143-4dfb-b482-e6ba30712bd4">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-12">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-18">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -1656,7 +2066,7 @@ result = converter.convert()
 </div>
 <div class="highlight-ipynb hl-python"><pre><span></span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-12"></div>
+<div class="clipboard-copy-txt" id="cell-18"></div>
 </div>
 </div>
 </div>
