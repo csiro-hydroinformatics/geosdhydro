@@ -2,7 +2,7 @@ import geopandas as gpd
 import pytest
 from shapely.geometry import LineString
 
-from geosdhydro.swift import ShapefileToSwiftConverter
+from geosdhydro import ShapefileToSwiftConverter
 
 
 def test_one_link_two_nodes_one_subarea() -> None:

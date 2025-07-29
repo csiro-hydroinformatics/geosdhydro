@@ -20,6 +20,21 @@ class ShapefileToSwiftConverter:
         self.include_coordinates = include_coordinates
         self._check_geodf()
 
+    @property
+    def gdf(self) -> gpd.GeoDataFrame:
+        """The geodataframe from which we build the json file."""
+        return self._gdf
+    @gdf.setter
+    def gdf(self, value: gpd.GeoDataFrame) -> None:
+        self._gdf = value
+
+    @property
+    def include_coordinates(self) -> bool:
+        """Should the Latitude/Longitude coordinates be derived from the geometry and written in the json file."""
+        return self._include_coordinates
+    @include_coordinates.setter
+    def include_coordinates(self, value: bool) -> None:
+        self._include_coordinates = value
 
     def _check_geodf(self) -> None:
         """Check the GeoDataFrame for required columns and types."""
@@ -35,7 +50,7 @@ class ShapefileToSwiftConverter:
         if set(required_columns_names).intersection(set(self.gdf.columns)) != set(required_columns_names):
             raise ValueError(f"The GeoDataFrame does not contain all the required columns: {required_columns_names}")
 
-        # IDs should be strings, even if legacy are ints. 
+        # IDs should be strings, even if legacy are ints.
         self.gdf["LinkID"] = self.gdf["LinkID"].astype(str)
         self.gdf["FromNodeID"] = self.gdf["FromNodeID"].astype(str)
         self.gdf["ToNodeID"] = self.gdf["ToNodeID"].astype(str)
