@@ -1,4 +1,5 @@
 import geopandas as gpd
+import pytest
 from shapely.geometry import LineString
 
 from geosdhydro.swift import ShapefileToSwiftConverter
@@ -147,3 +148,67 @@ def test_complex_catchment_structure() -> None:
 
     # Verify link 4 has no subarea
     assert "4" not in subarea_link_ids
+
+
+
+def test_invalid_tonodeid_type() -> None:
+    """Test that an exception is raised when ToNodeID column is of an unexpected float type."""
+    # Create test data with ToNodeID as float
+    data = {
+        "LinkID": [1],
+        "FromNodeID": [1],
+        "ToNodeID": ["2"],
+        "SPathLen": ["1000.0"], # wrong type
+        "DArea2": [5000000.0],
+        "geometry": [LineString([(1.1, 1.2), (2.1, 2.2)])],
+    }
+    gdf = gpd.GeoDataFrame(data)
+
+    # Expect a TypeError due to wrong column type
+    with pytest.raises(TypeError):
+        ShapefileToSwiftConverter(gdf)
+
+
+def test_invalid_spathlenname_type() -> None:
+    """Test that an exception is raised when ToNodeID column is of an unexpected float type."""
+    # Create test data with ToNodeID as float
+    data = {
+        "LinkID": [1],
+        "FromNodeID": [1],
+        "ToNodeID": ["2"],
+        "SPathLen_WrongName": [1000.0],
+        "DArea2": [5000000.0],
+        "geometry": [LineString([(1.1, 1.2), (2.1, 2.2)])],
+    }
+    gdf = gpd.GeoDataFrame(data)
+
+    # Expect a TypeError due to wrong column type
+    with pytest.raises(ValueError):  # noqa: PT011
+        ShapefileToSwiftConverter(gdf)
+
+def test_duplicate_link_ids() -> None:
+    """Test that an exception is raised when LinkID column contains duplicate values."""
+    # Create test data with duplicate LinkID values
+    data = {
+        "LinkID": [1, 2, 1, 3, 2, 2],  # LinkID 1 and 2 are duplicated
+        "FromNodeID": [1, 2, 1, 3, 2, 2],
+        "ToNodeID": [2, 3, 2, 4, 3, 3],
+        "SPathLen": [1000.0, 1500.0, 1000.0, 2000.0, 1500.0, 1500.0],
+        "DArea2": [5000000.0, 4000000.0, 5000000.0, 3000000.0, 4000000.0, 4000000.0],
+        "geometry": [
+            LineString([(1.1, 1.2), (2.1, 2.2)]),
+            LineString([(2.1, 2.2), (3.1, 3.2)]),
+            LineString([(1.1, 1.2), (2.1, 2.2)]),
+            LineString([(3.1, 3.2), (4.1, 4.2)]),
+            LineString([(2.1, 2.2), (3.1, 3.2)]),
+            LineString([(2.1, 2.2), (3.1, 3.2)]),
+        ],
+    }
+    gdf = gpd.GeoDataFrame(data)
+
+    # Expect a ValueError due to duplicate LinkID values
+    with pytest.raises(ValueError) as excinfo:  # noqa: PT011
+        ShapefileToSwiftConverter(gdf)
+
+    # Check the error message
+    assert "Column 'LinkID' contains duplicate values: ['2', '1'] at indices" in str(excinfo.value)

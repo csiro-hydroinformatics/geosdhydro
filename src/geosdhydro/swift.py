@@ -18,6 +18,48 @@ class ShapefileToSwiftConverter:
         """
         self.gdf = gdf
         self.include_coordinates = include_coordinates
+        self._check_geodf()
+
+
+    def _check_geodf(self) -> None:
+        """Check the GeoDataFrame for required columns and types."""
+        required_columns_names = [
+            "LinkID",
+            "FromNodeID",
+            "ToNodeID",
+            "SPathLen",
+            "DArea2",
+            "geometry",
+        ]
+
+        if set(required_columns_names).intersection(set(self.gdf.columns)) != set(required_columns_names):
+            raise ValueError(f"The GeoDataFrame does not contain all the required columns: {required_columns_names}")
+
+        # IDs should be strings, even if legacy are ints. 
+        self.gdf["LinkID"] = self.gdf["LinkID"].astype(str)
+        self.gdf["FromNodeID"] = self.gdf["FromNodeID"].astype(str)
+        self.gdf["ToNodeID"] = self.gdf["ToNodeID"].astype(str)
+
+        required_columns = {
+            # "LinkID": "int64",
+            # "FromNodeID": "int64",
+            # "ToNodeID": "int64",
+            "SPathLen": "float64",
+            "DArea2": "float64",
+            # TODO test geometry column, but I could not figure out how.
+            # "geometry": gpd.array.GeometryDtype,
+        }
+        for column, expected_type in required_columns.items():
+            if self.gdf[column].dtype != expected_type:
+                raise TypeError(f"Column '{column}' must be of type {expected_type}.")
+
+        # Check for duplicate LinkID values
+        link_id_counts = self.gdf["LinkID"].value_counts()
+        duplicates = link_id_counts[link_id_counts > 1]
+        if not duplicates.empty:
+            duplicate_indices = self.gdf[self.gdf["LinkID"].isin(duplicates.index)].index.tolist()
+            raise ValueError(f"Column 'LinkID' contains duplicate values: {duplicates.index.tolist()} at indices {duplicate_indices}.")
+
 
     def convert(self) -> Dict[str, Any]:
         """Convert shapefile data to SWIFT JSON format.
