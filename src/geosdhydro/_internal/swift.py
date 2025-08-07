@@ -5,11 +5,28 @@ from typing import Any, Dict, List, Tuple  # noqa: UP035
 
 import geopandas as gpd
 
+_default_linkid_field = "LinkID"
+_default_fromnodeid_field = "FromNodeID"
+_default_tonodeid_field = "ToNodeID"
+_default_spathlen_field = "SPathLen"
+_default_darea2_field = "DArea2"
+_default_geometry_field = "geometry"
+
 
 class ShapefileToSwiftConverter:
     """Converts shapefile data to SWIFT JSON catchment structure."""
 
-    def __init__(self, gdf: gpd.GeoDataFrame, include_coordinates: bool = False):  # noqa: FBT001, FBT002
+    def __init__(
+        self,
+        gdf: gpd.GeoDataFrame,
+        include_coordinates: bool = False,  # noqa: FBT001, FBT002
+        linkid_field: str = "LinkID",
+        fromnodeid_field: str = "FromNodeID",
+        tonodeid_field: str = "ToNodeID",
+        spathlen_field: str = "SPathLen",
+        darea2_field: str = "DArea2",
+        geometry_field: str = "geometry",
+    ):
         """Initialize converter with geopandas dataframe.
 
         Args:
@@ -18,6 +35,12 @@ class ShapefileToSwiftConverter:
         """
         self.gdf = gdf
         self.include_coordinates = include_coordinates
+        self._linkid_field = linkid_field if linkid_field else _default_linkid_field
+        self._fromnodeid_field = fromnodeid_field if fromnodeid_field else _default_fromnodeid_field
+        self._tonodeid_field = tonodeid_field if tonodeid_field else _default_tonodeid_field
+        self._spathlen_field = spathlen_field if spathlen_field else _default_spathlen_field
+        self._darea2_field = darea2_field if darea2_field else _default_darea2_field
+        self._geometry_field = geometry_field if geometry_field else _default_geometry_field
         self._check_geodf()
 
     @property
@@ -39,40 +62,40 @@ class ShapefileToSwiftConverter:
     def _check_geodf(self) -> None:
         """Check the GeoDataFrame for required columns and types."""
         required_columns_names = [
-            "LinkID",
-            "FromNodeID",
-            "ToNodeID",
-            "SPathLen",
-            "DArea2",
-            "geometry",
+            self._linkid_field,
+            self._fromnodeid_field,
+            self._tonodeid_field,
+            self._spathlen_field,
+            self._darea2_field,
+            self._geometry_field,
         ]
 
         if set(required_columns_names).intersection(set(self.gdf.columns)) != set(required_columns_names):
             raise ValueError(f"The GeoDataFrame does not contain all the required columns: {required_columns_names}")
 
         # IDs should be strings, even if legacy are ints.
-        self.gdf["LinkID"] = self.gdf["LinkID"].astype(str)
-        self.gdf["FromNodeID"] = self.gdf["FromNodeID"].astype(str)
-        self.gdf["ToNodeID"] = self.gdf["ToNodeID"].astype(str)
+        self.gdf[self._linkid_field] = self.gdf[self._linkid_field].astype(str)
+        self.gdf[self._fromnodeid_field] = self.gdf[self._fromnodeid_field].astype(str)
+        self.gdf[self._tonodeid_field] = self.gdf[self._tonodeid_field].astype(str)
 
         required_columns = {
-            # "LinkID": "int64",
-            # "FromNodeID": "int64",
-            # "ToNodeID": "int64",
-            "SPathLen": "float64",
-            "DArea2": "float64",
+            # self._linkid_field: "int64",
+            # self._fromnodeid_field: "int64",
+            # self._tonodeid_field: "int64",
+            self._spathlen_field: "float64",
+            self._darea2_field: "float64",
             # TODO test geometry column, but I could not figure out how.
-            # "geometry": gpd.array.GeometryDtype,
+            # self._geometry_field: gpd.array.GeometryDtype,
         }
         for column, expected_type in required_columns.items():
             if self.gdf[column].dtype != expected_type:
                 raise TypeError(f"Column '{column}' must be of type {expected_type}.")
 
         # Check for duplicate LinkID values
-        link_id_counts = self.gdf["LinkID"].value_counts()
+        link_id_counts = self.gdf[self._linkid_field].value_counts()
         duplicates = link_id_counts[link_id_counts > 1]
         if not duplicates.empty:
-            duplicate_indices = self.gdf[self.gdf["LinkID"].isin(duplicates.index)].index.tolist()
+            duplicate_indices = self.gdf[self.gdf[self._linkid_field].isin(duplicates.index)].index.tolist()
             raise ValueError(f"Column 'LinkID' contains duplicate values: {duplicates.index.tolist()} at indices {duplicate_indices}.")
 
 
@@ -100,13 +123,13 @@ class ShapefileToSwiftConverter:
         for _, row in self.gdf.iterrows():
             link = {
                 "ChannelRouting": {"ChannelRoutingType": "NoRouting"},
-                "DownstreamNodeID": str(row["ToNodeID"]),
-                "ID": str(row["LinkID"]),
-                "Length": float(row["SPathLen"]),
+                "DownstreamNodeID": str(row[self._tonodeid_field]),
+                "ID": str(row[self._linkid_field]),
+                "Length": float(row[self._spathlen_field]),
                 "ManningsN": 1.0,
-                "Name": str(row["LinkID"]),
+                "Name": str(row[self._linkid_field]),
                 "Slope": 1.0,
-                "UpstreamNodeID": str(row["FromNodeID"]),
+                "UpstreamNodeID": str(row[self._fromnodeid_field]),
                 "f": 1.0,
             }
             links.append(link)
@@ -120,23 +143,23 @@ class ShapefileToSwiftConverter:
         """
         node_coords = {}
         for _, row in self.gdf.iterrows():
-            geom = row["geometry"]
+            geom = row[self._geometry_field]
             coords = list(geom.coords)
 
             # Start point for FromNodeID
             start_lon, start_lat = coords[0]
-            node_coords[row["FromNodeID"]] = (start_lon, start_lat)
+            node_coords[row[self._fromnodeid_field]] = (start_lon, start_lat)
 
             # End point for ToNodeID
             end_lon, end_lat = coords[-1]
-            node_coords[row["ToNodeID"]] = (end_lon, end_lat)
+            node_coords[row[self._tonodeid_field]] = (end_lon, end_lat)
 
         return node_coords
 
     def _create_nodes(self) -> List[Dict[str, Any]]:
         """Create nodes section of JSON from dataframe."""
-        from_nodes = set(self.gdf["FromNodeID"])
-        to_nodes = set(self.gdf["ToNodeID"])
+        from_nodes = set(self.gdf[self._fromnodeid_field])
+        to_nodes = set(self.gdf[self._tonodeid_field])
         unique_nodes = from_nodes.union(to_nodes)
 
         # Get coordinates if requested
@@ -164,11 +187,11 @@ class ShapefileToSwiftConverter:
         """Create subareas section of JSON from dataframe."""
         subareas = []
         for _, row in self.gdf.iterrows():
-            if row["DArea2"] > 0:
+            if row[self._darea2_field] > 0:
                 subarea = {
-                    "AreaKm2": float(row["DArea2"]) / 1_000_000,
-                    "ID": str(row["LinkID"]),
-                    "LinkID": str(row["LinkID"]),
+                    "AreaKm2": float(row[self._darea2_field]) / 1_000_000,
+                    "ID": str(row[self._linkid_field]),
+                    "LinkID": str(row[self._linkid_field]),
                     "Name": f"Subarea_{row['LinkID']}",
                     "RunoffModel": {
                         "PercFactor": 2.25,

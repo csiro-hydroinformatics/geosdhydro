@@ -5,7 +5,7 @@
 [![pypi version](https://img.shields.io/pypi/v/geosdhydro.svg)](https://pypi.org/project/geosdhydro/)
 [![gitter](https://badges.gitter.im/join%20chat.svg)](https://app.gitter.im/#/room/#geosdhydro:gitter.im)
 
-GIS tools for semi-distributed hydrologic modelling
+**Geo**spatial tools for **s**emi-**d**istributed **hydro**logic modelling
 
 ## Installation
 
