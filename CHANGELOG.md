@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 <!-- insertion marker -->
+## [0.2.0](https://github.com/csiro-hydroinformatics/geosdhydro/releases/tag/0.2.0) - 2025-08-07
+
+<small>[Compare with 0.1.1](https://github.com/csiro-hydroinformatics/geosdhydro/compare/0.1.1...0.2.0)</small>
+
+### Features
+
+- customisable field names for the input shapefile. ([6c51ee3](https://github.com/csiro-hydroinformatics/geosdhydro/commit/6c51ee3b05966db14e7eb68ead46657f824eeddc) by J-M).
+
 ## [0.1.1](https://github.com/csiro-hydroinformatics/geosdhydro/releases/tag/0.1.1) - 2025-07-29
 
 <small>[Compare with 0.1.0](https://github.com/csiro-hydroinformatics/geosdhydro/compare/0.1.0...0.1.1)</small>
