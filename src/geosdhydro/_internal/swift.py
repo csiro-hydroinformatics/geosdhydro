@@ -43,6 +43,20 @@ class ShapefileToSwiftConverter:
         self._geometry_field = geometry_field if geometry_field else _default_geometry_field
         self._check_geodf()
 
+        self._runoff_model = {
+            "PercFactor": 2.25,
+            "R": 0.0,
+            "RunoffModelType": "GR4J",
+            "S": 0.0,
+            "SurfaceRunoffRouting": {"SurfaceRunoffRoutingType": "NoRouting"},
+            "UHExponent": 2.5,
+            "x1": 350.0,
+            "x2": 0.0,
+            "x3": 40.0,
+            "x4": 0.5,
+        }
+        self.routing_model = {"ChannelRoutingType": "NoRouting"}
+
     @property
     def gdf(self) -> gpd.GeoDataFrame:
         """The geodataframe from which we build the json file."""
@@ -58,6 +72,22 @@ class ShapefileToSwiftConverter:
     @include_coordinates.setter
     def include_coordinates(self, value: bool) -> None:
         self._include_coordinates = value
+
+    @property
+    def runoff_model(self) -> dict:
+        """Dictionary for the rainfall-runoff model sections of the json file."""
+        return self._runoff_model
+    @runoff_model.setter
+    def runoff_model(self, value:dict) -> None:
+        self._runoff_model = value
+
+    @property
+    def routing_model(self) -> dict:
+        """Dictionary for the routing model sections of the json file."""
+        return self._routing_model
+    @routing_model.setter
+    def routing_model(self, value:dict) -> None:
+        self._routing_model = value
 
     def _check_geodf(self) -> None:
         """Check the GeoDataFrame for required columns and types."""
@@ -122,7 +152,7 @@ class ShapefileToSwiftConverter:
         links = []
         for _, row in self.gdf.iterrows():
             link = {
-                "ChannelRouting": {"ChannelRoutingType": "NoRouting"},
+                "ChannelRouting": self.routing_model,
                 "DownstreamNodeID": str(row[self._tonodeid_field]),
                 "ID": str(row[self._linkid_field]),
                 "Length": float(row[self._spathlen_field]),
@@ -193,18 +223,7 @@ class ShapefileToSwiftConverter:
                     "ID": str(row[self._linkid_field]),
                     "LinkID": str(row[self._linkid_field]),
                     "Name": f"Subarea_{row['LinkID']}",
-                    "RunoffModel": {
-                        "PercFactor": 2.25,
-                        "R": 0.0,
-                        "RunoffModelType": "GR4J",
-                        "S": 0.0,
-                        "SurfaceRunoffRouting": {"SurfaceRunoffRoutingType": "NoRouting"},
-                        "UHExponent": 2.5,
-                        "x1": 350.0,
-                        "x2": 0.0,
-                        "x3": 40.0,
-                        "x4": 0.5,
-                    },
+                    "RunoffModel": self.runoff_model,
                 }
                 subareas.append(subarea)
         return subareas
