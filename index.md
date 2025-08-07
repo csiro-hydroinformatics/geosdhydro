@@ -1,6 +1,6 @@
 # geosdhydro
 
-GIS tools for semi-distributed hydrologic modelling
+**Geo**spatial tools for **s**emi-**d**istributed **hydro**logic modelling
 
 ## Installation
 

@@ -6,7 +6,7 @@
 
 # geosdhydro
 
-GIS tools for semi-distributed hydrologic modelling
+**Geo**spatial tools for **s**emi-**d**istributed **hydro**logic modelling
 
 ## Installation
 
@@ -52,7 +52,14 @@ Functions:
 
 ```
 ShapefileToSwiftConverter(
-    gdf: GeoDataFrame, include_coordinates: bool = False
+    gdf: GeoDataFrame,
+    include_coordinates: bool = False,
+    linkid_field: str = "LinkID",
+    fromnodeid_field: str = "FromNodeID",
+    tonodeid_field: str = "ToNodeID",
+    spathlen_field: str = "SPathLen",
+    darea2_field: str = "DArea2",
+    geometry_field: str = "geometry",
 )
 
 ```
@@ -73,11 +80,23 @@ Attributes:
 
 - **`gdf`** (`GeoDataFrame`) – The geodataframe from which we build the json file.
 - **`include_coordinates`** (`bool`) – Should the Latitude/Longitude coordinates be derived from the geometry and written in the json file.
+- **`routing_model`** (`dict`) – Dictionary for the routing model sections of the json file.
+- **`runoff_model`** (`dict`) – Dictionary for the rainfall-runoff model sections of the json file.
 
 Source code in `src/geosdhydro/_internal/swift.py`
 
 ```
-def __init__(self, gdf: gpd.GeoDataFrame, include_coordinates: bool = False):  # noqa: FBT001, FBT002
+def __init__(
+    self,
+    gdf: gpd.GeoDataFrame,
+    include_coordinates: bool = False,  # noqa: FBT001, FBT002
+    linkid_field: str = "LinkID",
+    fromnodeid_field: str = "FromNodeID",
+    tonodeid_field: str = "ToNodeID",
+    spathlen_field: str = "SPathLen",
+    darea2_field: str = "DArea2",
+    geometry_field: str = "geometry",
+):
     """Initialize converter with geopandas dataframe.
 
     Args:
@@ -86,7 +105,27 @@ def __init__(self, gdf: gpd.GeoDataFrame, include_coordinates: bool = False):  #
     """
     self.gdf = gdf
     self.include_coordinates = include_coordinates
+    self._linkid_field = linkid_field if linkid_field else _default_linkid_field
+    self._fromnodeid_field = fromnodeid_field if fromnodeid_field else _default_fromnodeid_field
+    self._tonodeid_field = tonodeid_field if tonodeid_field else _default_tonodeid_field
+    self._spathlen_field = spathlen_field if spathlen_field else _default_spathlen_field
+    self._darea2_field = darea2_field if darea2_field else _default_darea2_field
+    self._geometry_field = geometry_field if geometry_field else _default_geometry_field
     self._check_geodf()
+
+    self._runoff_model = {
+        "PercFactor": 2.25,
+        "R": 0.0,
+        "RunoffModelType": "GR4J",
+        "S": 0.0,
+        "SurfaceRunoffRouting": {"SurfaceRunoffRoutingType": "NoRouting"},
+        "UHExponent": 2.5,
+        "x1": 350.0,
+        "x2": 0.0,
+        "x3": 40.0,
+        "x4": 0.5,
+    }
+    self.routing_model = {"ChannelRoutingType": "NoRouting"}
 
 ```
 
@@ -107,6 +146,24 @@ include_coordinates: bool
 ```
 
 Should the Latitude/Longitude coordinates be derived from the geometry and written in the json file.
+
+### routing_model
+
+```
+routing_model: dict
+
+```
+
+Dictionary for the routing model sections of the json file.
+
+### runoff_model
+
+```
+runoff_model: dict
+
+```
+
+Dictionary for the rainfall-runoff model sections of the json file.
 
 ### convert
 
