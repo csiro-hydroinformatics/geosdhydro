@@ -25,6 +25,7 @@ nav:
     - basic_usage: nb/basic_usage.ipynb
     - lachlan : nb/lachlan.ipynb
     - load_lachlan : nb/load_lachlan.ipynb
+    - custom_names: nb/custom_names.ipynb
   - API reference: reference/api.md
   - Development:
     - Contributing: contributing.md

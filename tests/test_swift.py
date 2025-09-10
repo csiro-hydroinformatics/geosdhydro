@@ -222,8 +222,8 @@ def test_valid_numeric_types() -> None:
             "LinkID": [1],
             "FromNodeID": [1],
             "ToNodeID": [2],
-            "SPathLen": [t(1000.0)],
-            "DArea2": [t(64000.0)],  # Valid numeric type, small enough to fit in uint16
+            "SPathLen": [t(1000)],
+            "DArea2": [t(64000)],  # Valid numeric type, small enough to fit in uint16
             "geometry": [LineString([(1.1, 1.2), (2.1, 2.2)])],
         }
         gdf = gpd.GeoDataFrame(data)
@@ -296,3 +296,64 @@ def test_invalid_numeric_types() -> None:
 
     with pytest.raises(TypeError):
         ShapefileToSwiftConverter(gdf4)
+
+def test_element_names() -> None:
+    """Test default/custom names for the elements."""
+    # Create test data, first without custom names
+    data = {
+        "LinkID": [1, 2, 3, 4, 5],
+        "FromNodeID": [2, 3, 4, 5, 6],
+        "ToNodeID": [1, 2, 2, 2, 5],
+        "SPathLen": [1000.0, 1500.0, 2000.0, 800.0, 1200.0],
+        "DArea2": [3000000.0, 4000000.0, 2500000.0, -1.0, 3500000.0],  # Link 4 has negative area
+        "geometry": [
+            LineString([(2.1, 2.2), (1.1, 1.2)]),  # Link 1: node 2 -> node 1
+            LineString([(3.1, 3.2), (2.1, 2.2)]),  # Link 2: node 3 -> node 2
+            LineString([(4.1, 4.2), (2.1, 2.2)]),  # Link 3: node 4 -> node 2
+            LineString([(5.1, 5.2), (2.1, 2.2)]),  # Link 4: node 5 -> node 2
+            LineString([(6.1, 6.2), (5.1, 5.2)]),  # Link 5: node 6 -> node 5
+        ],
+    }
+    gdf = gpd.GeoDataFrame(data)
+
+    # Test default names
+    converter = ShapefileToSwiftConverter(gdf)
+    result = converter.convert()
+
+    # Default names for links
+    assert all(link["Name"] == str(link["ID"]) for link in result["Links"])
+
+    # Default names for nodes
+    assert all(node["Name"] == f"Node_{node['ID']}" for node in result["Nodes"])
+
+    # Default names for subareas
+    assert all(subarea["Name"] == f"Subarea_{subarea['ID']}" for subarea in result["SubAreas"])
+
+    # Custom names for links
+    custom_linkname_fieldname = "LinkName"
+    data[custom_linkname_fieldname] = [f"CustomLinkName_{i}" for i in range(5)]
+
+    # Custom names for subareas
+    custom_subarea_name_fieldname = "SubAreaName"
+    data[custom_subarea_name_fieldname] = [f"CustomSubAreaName_{i}" for i in range(5)]
+    gdf = gpd.GeoDataFrame(data)
+
+    # Custom node names
+    some_dict = {str(i): f"CustomNodeName_{i}" for i in range(1, 7)}
+
+    converter = ShapefileToSwiftConverter(
+        gdf,
+        linkname_field=custom_linkname_fieldname,
+        subarea_name_field=custom_subarea_name_fieldname,
+        node_names=some_dict,
+    )
+    result = converter.convert()
+
+    # Assertions for custom link names
+    assert all(link["Name"] == f"CustomLinkName_{int(link['ID'])-1}" for link in result["Links"])
+
+    # Assertions for custom node names
+    assert all(node["Name"] == f"CustomNodeName_{node['ID']}" for node in result["Nodes"])
+
+    # Assertions for custom subarea names
+    assert all(subarea["Name"] == f"CustomSubAreaName_{int(subarea['ID'])-1}" for subarea in result["SubAreas"])

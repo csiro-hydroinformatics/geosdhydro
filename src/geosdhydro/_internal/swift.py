@@ -56,8 +56,9 @@ class ShapefileToSwiftConverter:
         spathlen_field: str = "SPathLen",
         darea2_field: str = "DArea2",
         geometry_field: str = "geometry",
-        # linkname_field: Optional[str] = "LinkName",
-        # subarea_name_field: Optional[str] = "SubAreaName",
+        linkname_field: Optional[str] = None,
+        subarea_name_field: Optional[str] = None,
+        node_names: Optional[Dict[str,str]] = None,
     ):
         """Initialize converter with geopandas dataframe.
 
@@ -72,6 +73,7 @@ class ShapefileToSwiftConverter:
             geometry_field: Name of the column containing geometry data
             linkname_field: Name of the column containing Link Names (optional)
             subarea_name_field: Name of the column containing SubArea Names (optional)
+            node_names: Optional mapping of node IDs to names (optional)
         """
         self.gdf = gdf
         self.include_coordinates = include_coordinates
@@ -81,6 +83,9 @@ class ShapefileToSwiftConverter:
         self._spathlen_field = spathlen_field if spathlen_field else _default_spathlen_field
         self._darea2_field = darea2_field if darea2_field else _default_darea2_field
         self._geometry_field = geometry_field if geometry_field else _default_geometry_field
+        self._linkname_field = linkname_field
+        self._subarea_name_field = subarea_name_field
+        self._node_names = node_names if node_names else {}
         self._check_geodf()
 
         self._runoff_model = {
@@ -190,6 +195,7 @@ class ShapefileToSwiftConverter:
     def _create_links(self) -> List[Dict[str, Any]]:
         """Create links section of JSON from dataframe."""
         links = []
+        linkname_field = self._linkname_field if self._linkname_field else self._linkid_field
         for _, row in self.gdf.iterrows():
             link = {
                 "ChannelRouting": self.routing_model,
@@ -197,7 +203,7 @@ class ShapefileToSwiftConverter:
                 "ID": str(row[self._linkid_field]),
                 "Length": float(row[self._spathlen_field]),
                 "ManningsN": 1.0,
-                "Name": str(row[self._linkid_field]),
+                "Name": str(row[linkname_field]),
                 "Slope": 1.0,
                 "UpstreamNodeID": str(row[self._fromnodeid_field]),
                 "f": 1.0,
@@ -226,6 +232,13 @@ class ShapefileToSwiftConverter:
 
         return node_coords
 
+
+    def _node_name(self, node_id:str) -> str:
+        """Generate a name for a node based on its ID."""
+        if self._node_name is not None and node_id in self._node_names:
+            return self._node_names[node_id]
+        return f"Node_{node_id}"
+
     def _create_nodes(self) -> List[Dict[str, Any]]:
         """Create nodes section of JSON from dataframe."""
         from_nodes = set(self.gdf[self._fromnodeid_field])
@@ -240,7 +253,7 @@ class ShapefileToSwiftConverter:
             node:Dict[str,Any] = {
                 "ErrorCorrection": {"ErrorCorrectionType": "NoErrorCorrection"},
                 "ID": str(node_id),
-                "Name": f"Node_{node_id}",
+                "Name": self._node_name(node_id),
                 "Reservoir": {"ReservoirType": "NoReservoir"},
             }
 
@@ -256,13 +269,19 @@ class ShapefileToSwiftConverter:
     def _create_subareas(self) -> List[Dict[str, Any]]:
         """Create subareas section of JSON from dataframe."""
         subareas = []
+        has_name_field = self._subarea_name_field is not None
+        def subarea_name(row:pd.Series) -> str:
+            if has_name_field:
+                return str(row[self._subarea_name_field])
+            return f"Subarea_{row[self._linkid_field]}"
+
         for _, row in self.gdf.iterrows():
             if row[self._darea2_field] > 0:
                 subarea = {
                     "AreaKm2": float(row[self._darea2_field]) / 1_000_000,
                     "ID": str(row[self._linkid_field]),
                     "LinkID": str(row[self._linkid_field]),
-                    "Name": f"Subarea_{row['LinkID']}",
+                    "Name": subarea_name(row),
                     "RunoffModel": self.runoff_model,
                 }
                 subareas.append(subarea)
