@@ -14,7 +14,7 @@
 # ---
 
 # %% [markdown]
-# # Generating swift catchment structure
+# # Getting started
 #
 # This is a sample notebook demonstrating how to use the `geosdhydro` package to convert a geopandas dataframe to a swift json file. A browsable form of this notebook should be at the [package documentation](https://csiro-hydroinformatics.github.io/geosdhydro/).
 

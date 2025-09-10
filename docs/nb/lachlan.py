@@ -14,7 +14,7 @@
 # ---
 
 # %% [markdown]
-# # Generating swift catchment structure for the Lachlan valley
+# # Catchment structure for the Lachlan valley
 #
 # Network definition for a shapefile with information on the Lachlan valley, as of ~8th August 2025. This is use case for customisable column names as well as being more liberal with the types of columns in the `geopandas` data frame resulting from reading the shapefile.
 #

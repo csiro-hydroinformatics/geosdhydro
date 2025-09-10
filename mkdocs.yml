@@ -14,18 +14,22 @@ validation:
   unrecognized_links: warn
 
 nav:
-- Home:
-  - Overview: index.md
-  - Changelog: changelog.md
-  - Credits: credits.md
-  - License: license.md
-- Examples:
-  - SWIFT JSON: nb/basic_usage.ipynb
-- API reference: reference/api.md
-- Development:
-  - Contributing: contributing.md
-  - Code of Conduct: code_of_conduct.md
-  - Coverage report: coverage.md
+  - Home:
+    - Overview: index.md
+    - Changelog: changelog.md
+    - Credits: credits.md
+    - License: license.md
+    # See https://github.com/danielfrg/mkdocs-jupyter/issues/251
+    # important config for the plugin `mkdocs-jupytext` to not include .py files 
+  - Examples:
+    - basic_usage: nb/basic_usage.ipynb
+    - lachlan : nb/lachlan.ipynb
+    - load_lachlan : nb/load_lachlan.ipynb
+  - API reference: reference/api.md
+  - Development:
+    - Contributing: contributing.md
+    - Code of Conduct: code_of_conduct.md
+    - Coverage report: coverage.md
 
 theme:
   name: material
@@ -100,7 +104,17 @@ markdown_extensions:
 plugins:
 - search
 - autorefs
-- mkdocs-jupyter
+- mkdocs-jupyter:
+    ignore_h1_titles: false
+    # IMPORTANT: explicit include
+    # Any jupytext sync-ed .py files alongside *.ipynb
+    # and this will muck up the navigable hierarchy display.
+    # relates to https://github.com/danielfrg/mkdocs-jupyter/issues/251
+    include: ["*.ipynb"] 
+    # ignore: ["some-irrelevant-files/*.ipynb"]
+    execute: false
+    show_input: true
+    include_source: true
 - markdown-exec
 - section-index
 - coverage
@@ -154,15 +168,15 @@ extra:
     link: https://gitter.im/geosdhydro/community
   - icon: fontawesome/brands/python
     link: https://pypi.org/project/geosdhydro/
-  analytics:
-    feedback:
-      title: Was this page helpful?
-      ratings:
-        - icon: material/emoticon-happy-outline
-          name: This page was helpful
-          data: 1
-          note: Thanks for your feedback!
-        - icon: material/emoticon-sad-outline
-          name: This page could be improved
-          data: 0
-          note: Let us know how we can improve this page.
+  # analytics:
+  #   feedback:
+  #     title: Was this page helpful?
+  #     ratings:
+  #       - icon: material/emoticon-happy-outline
+  #         name: This page was helpful
+  #         data: 1
+  #         note: Thanks for your feedback!
+  #       - icon: material/emoticon-sad-outline
+  #         name: This page could be improved
+  #         data: 0
+  #         note: Let us know how we can improve this page.
