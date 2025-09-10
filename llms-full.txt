@@ -60,6 +60,9 @@ ShapefileToSwiftConverter(
     spathlen_field: str = "SPathLen",
     darea2_field: str = "DArea2",
     geometry_field: str = "geometry",
+    linkname_field: Optional[str] = None,
+    subarea_name_field: Optional[str] = None,
+    node_names: Optional[Dict[str, str]] = None,
 )
 
 ```
@@ -70,6 +73,15 @@ Parameters:
 
 - **`gdf`** (`GeoDataFrame`) – GeoDataFrame loaded from shapefile containing link data
 - **`include_coordinates`** (`bool`, default: `False` ) – Whether to include lat/lon in node definitions
+- **`linkid_field`** (`str`, default: `'LinkID'` ) – Name of the column containing Link IDs
+- **`fromnodeid_field`** (`str`, default: `'FromNodeID'` ) – Name of the column containing From Node IDs
+- **`tonodeid_field`** (`str`, default: `'ToNodeID'` ) – Name of the column containing To Node IDs
+- **`spathlen_field`** (`str`, default: `'SPathLen'` ) – Name of the column containing Stream Path Lengths (in meters)
+- **`darea2_field`** (`str`, default: `'DArea2'` ) – Name of the column containing Subarea Drainage Area (in square meters)
+- **`geometry_field`** (`str`, default: `'geometry'` ) – Name of the column containing geometry data
+- **`linkname_field`** (`Optional[str]`, default: `None` ) – Name of the column containing Link Names (optional)
+- **`subarea_name_field`** (`Optional[str]`, default: `None` ) – Name of the column containing SubArea Names (optional)
+- **`node_names`** (`Optional[Dict[str, str]]`, default: `None` ) – Optional mapping of node IDs to names (optional)
 
 Methods:
 
@@ -96,12 +108,24 @@ def __init__(
     spathlen_field: str = "SPathLen",
     darea2_field: str = "DArea2",
     geometry_field: str = "geometry",
+    linkname_field: Optional[str] = None,
+    subarea_name_field: Optional[str] = None,
+    node_names: Optional[Dict[str,str]] = None,
 ):
     """Initialize converter with geopandas dataframe.
 
     Args:
         gdf: GeoDataFrame loaded from shapefile containing link data
         include_coordinates: Whether to include lat/lon in node definitions
+        linkid_field: Name of the column containing Link IDs
+        fromnodeid_field: Name of the column containing From Node IDs
+        tonodeid_field: Name of the column containing To Node IDs
+        spathlen_field: Name of the column containing Stream Path Lengths (in meters)
+        darea2_field: Name of the column containing Subarea Drainage Area (in square meters)
+        geometry_field: Name of the column containing geometry data
+        linkname_field: Name of the column containing Link Names (optional)
+        subarea_name_field: Name of the column containing SubArea Names (optional)
+        node_names: Optional mapping of node IDs to names (optional)
     """
     self.gdf = gdf
     self.include_coordinates = include_coordinates
@@ -111,6 +135,9 @@ def __init__(
     self._spathlen_field = spathlen_field if spathlen_field else _default_spathlen_field
     self._darea2_field = darea2_field if darea2_field else _default_darea2_field
     self._geometry_field = geometry_field if geometry_field else _default_geometry_field
+    self._linkname_field = linkname_field
+    self._subarea_name_field = subarea_name_field
+    self._node_names = node_names if node_names else {}
     self._check_geodf()
 
     self._runoff_model = {
