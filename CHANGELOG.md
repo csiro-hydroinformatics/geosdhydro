@@ -6,6 +6,15 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 <!-- insertion marker -->
+## [0.4.0](https://github.com/csiro-hydroinformatics/geosdhydro/releases/tag/0.4.0) - 2025-09-10
+
+<small>[Compare with 0.3.0](https://github.com/csiro-hydroinformatics/geosdhydro/compare/0.3.0...0.4.0)</small>
+
+### Features
+
+- optional custom names for nodes, links, subareas ([a6fa136](https://github.com/csiro-hydroinformatics/geosdhydro/commit/a6fa136a01dd5ef339986221278016761f93f6f6) by J-M). [Issue-5](https://github.com/csiro-hydroinformatics/geosdhydro/issues/5)
+- Support some numeric types as inputs for path length and subarea area ([f773fcc](https://github.com/csiro-hydroinformatics/geosdhydro/commit/f773fcca17ed3f4dc408bbc7e86a33aec73954bd) by J-M).
+
 ## [0.3.0](https://github.com/csiro-hydroinformatics/geosdhydro/releases/tag/0.3.0) - 2025-08-08
 
 <small>[Compare with 0.2.0](https://github.com/csiro-hydroinformatics/geosdhydro/compare/0.2.0...0.3.0)</small>
