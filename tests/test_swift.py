@@ -1,4 +1,6 @@
 import geopandas as gpd
+import numpy as np
+import pandas as pd
 import pytest
 from shapely.geometry import LineString
 
@@ -151,14 +153,14 @@ def test_complex_catchment_structure() -> None:
 
 
 
-def test_invalid_tonodeid_type() -> None:
-    """Test that an exception is raised when ToNodeID column is of an unexpected float type."""
+def test_invalid_spathlen_type() -> None:
+    """Test that an exception is raised when spathlen is not a numeric type."""
     # Create test data with ToNodeID as float
     data = {
         "LinkID": [1],
         "FromNodeID": [1],
         "ToNodeID": ["2"],
-        "SPathLen": ["1000.0"], # wrong type
+        "SPathLen": ["1000.0"], # valid, but wrong type, cannot be converted to float
         "DArea2": [5000000.0],
         "geometry": [LineString([(1.1, 1.2), (2.1, 2.2)])],
     }
@@ -170,8 +172,7 @@ def test_invalid_tonodeid_type() -> None:
 
 
 def test_invalid_spathlenname_type() -> None:
-    """Test that an exception is raised when ToNodeID column is of an unexpected float type."""
-    # Create test data with ToNodeID as float
+    """Test that an exception is raised when SPathLen column is not default expected name."""
     data = {
         "LinkID": [1],
         "FromNodeID": [1],
@@ -212,3 +213,86 @@ def test_duplicate_link_ids() -> None:
 
     # Check the error message
     assert "Column 'LinkID' contains duplicate values: ['2', '1'] at indices" in str(excinfo.value)
+
+def test_valid_numeric_types() -> None:
+    """Test that valid numeric types for SPathLen and DArea2 columns are accepted."""
+    # Create test data with various numeric types
+    for t in [float, np.float32, np.int32, np.uint16]:
+        data = {
+            "LinkID": [1],
+            "FromNodeID": [1],
+            "ToNodeID": [2],
+            "SPathLen": [t(1000.0)],
+            "DArea2": [t(64000.0)],  # Valid numeric type, small enough to fit in uint16
+            "geometry": [LineString([(1.1, 1.2), (2.1, 2.2)])],
+        }
+        gdf = gpd.GeoDataFrame(data)
+
+        # Should successfully create converter without errors
+        converter = ShapefileToSwiftConverter(gdf)
+        result = converter.convert()
+
+        # Verify data was properly converted to float64
+        links = result["Links"]
+        assert len(links) == 1
+
+        # Check that values match expected (all converted to float64)
+        assert links[0]["Length"] == 1000.0
+
+        # Check subareas (DArea2 converted to km²)
+        subareas = result["SubAreas"]
+        assert len(subareas) == 1
+        assert subareas[0]["AreaKm2"] == 0.064
+
+
+def test_invalid_numeric_types() -> None:
+    """Test that invalid types for SPathLen and DArea2 columns raise appropriate errors."""
+    # Test 1: Non-numeric string in SPathLen
+    data1 = {
+        "LinkID": [1],
+        "FromNodeID": [1],
+        "ToNodeID": [2],
+        "SPathLen": ["not-a-number"],  # String that can't be converted to float
+        "DArea2": [5000000.0],
+        "geometry": [LineString([(1.1, 1.2), (2.1, 2.2)])],
+    }
+    gdf1 = gpd.GeoDataFrame(data1)
+    with pytest.raises(TypeError):
+        ShapefileToSwiftConverter(gdf1)
+    # Test 2: Boolean in DArea2
+    data2 = {
+        "LinkID": [1],
+        "FromNodeID": [1],
+        "ToNodeID": [2],
+        "SPathLen": [1000.0],
+        "DArea2": [True],  # Boolean value
+        "geometry": [LineString([(1.1, 1.2), (2.1, 2.2)])],
+    }
+    gdf2 = gpd.GeoDataFrame(data2)
+    with pytest.raises(TypeError):
+        ShapefileToSwiftConverter(gdf2)
+    # Test 3: Object with mixed types
+    data3 = {
+        "LinkID": [1],
+        "FromNodeID": [1],
+        "ToNodeID": [2],
+        "SPathLen": [1000.0],
+        "DArea2": [pd.Series([1, 2, 3])],  # A pandas Series object
+        "geometry": [LineString([(1.1, 1.2), (2.1, 2.2)])],
+    }
+    gdf3 = gpd.GeoDataFrame(data3)
+    with pytest.raises(TypeError):
+        ShapefileToSwiftConverter(gdf3)
+    # Test 4: Date/time object
+    data4 = {
+        "LinkID": [1],
+        "FromNodeID": [1],
+        "ToNodeID": [2],
+        "SPathLen": [np.datetime64("2023-01-01")],  # Datetime object
+        "DArea2": [5000000.0],
+        "geometry": [LineString([(1.1, 1.2), (2.1, 2.2)])],
+    }
+    gdf4 = gpd.GeoDataFrame(data4)
+
+    with pytest.raises(TypeError):
+        ShapefileToSwiftConverter(gdf4)

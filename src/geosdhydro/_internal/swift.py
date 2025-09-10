@@ -1,9 +1,10 @@
 """Convert shapefile data to SWIFT JSON catchment structure."""
 
 import json
-from typing import Any, Dict, List, Tuple  # noqa: UP035
+from typing import Any, Dict, List, Optional, Tuple  # noqa: UP035
 
 import geopandas as gpd
+import pandas as pd
 
 _default_linkid_field = "LinkID"
 _default_fromnodeid_field = "FromNodeID"
@@ -12,6 +13,35 @@ _default_spathlen_field = "SPathLen"
 _default_darea2_field = "DArea2"
 _default_geometry_field = "geometry"
 
+
+
+# List of dtypes known to be safely convertible to float64
+_safe_dtypes = [
+    # we leave out 8 bit rep for ints, too small range in this case
+    "float16", "float32", "float64",      # Float types
+    "int16", "int32",             # Integer types that fit in float64
+    "uint16", "uint32",          # Unsigned int types that fit
+    # we may loose precision for very large int64/uint64 values,
+    # but at values > 2**53, so we allow them
+    "int64", "uint64",  # These might lose precision for very large values
+]
+
+def _is_convertible_to_float64(df:pd.DataFrame, column_name:str) -> bool:
+    """Check if column has a dtype that is known to be safely convertible to float64.
+
+    Args:
+        df: DataFrame or GeoDataFrame containing the column
+        column_name: Name of the column to check
+
+    Returns:
+        bool: True if the column has a compatible dtype for float64 conversion
+    """
+    if column_name not in df.columns:
+        return False
+
+    # Check if column dtype is in our safe list
+    return pd.api.types.is_dtype_equal(df[column_name].dtype, "float64") or \
+           any(pd.api.types.is_dtype_equal(df[column_name].dtype, dtype) for dtype in _safe_dtypes)
 
 class ShapefileToSwiftConverter:
     """Converts shapefile data to SWIFT JSON catchment structure."""
@@ -26,12 +56,22 @@ class ShapefileToSwiftConverter:
         spathlen_field: str = "SPathLen",
         darea2_field: str = "DArea2",
         geometry_field: str = "geometry",
+        # linkname_field: Optional[str] = "LinkName",
+        # subarea_name_field: Optional[str] = "SubAreaName",
     ):
         """Initialize converter with geopandas dataframe.
 
         Args:
             gdf: GeoDataFrame loaded from shapefile containing link data
             include_coordinates: Whether to include lat/lon in node definitions
+            linkid_field: Name of the column containing Link IDs
+            fromnodeid_field: Name of the column containing From Node IDs
+            tonodeid_field: Name of the column containing To Node IDs
+            spathlen_field: Name of the column containing Stream Path Lengths (in meters)
+            darea2_field: Name of the column containing Subarea Drainage Area (in square meters)
+            geometry_field: Name of the column containing geometry data
+            linkname_field: Name of the column containing Link Names (optional)
+            subarea_name_field: Name of the column containing SubArea Names (optional)
         """
         self.gdf = gdf
         self.include_coordinates = include_coordinates
@@ -108,18 +148,18 @@ class ShapefileToSwiftConverter:
         self.gdf[self._fromnodeid_field] = self.gdf[self._fromnodeid_field].astype(str)
         self.gdf[self._tonodeid_field] = self.gdf[self._tonodeid_field].astype(str)
 
-        required_columns = {
-            # self._linkid_field: "int64",
-            # self._fromnodeid_field: "int64",
-            # self._tonodeid_field: "int64",
-            self._spathlen_field: "float64",
-            self._darea2_field: "float64",
-            # TODO test geometry column, but I could not figure out how.
-            # self._geometry_field: gpd.array.GeometryDtype,
-        }
-        for column, expected_type in required_columns.items():
-            if self.gdf[column].dtype != expected_type:
-                raise TypeError(f"Column '{column}' must be of type {expected_type}.")
+        # TODO test geometry column, but I could not figure out how.
+        # self._geometry_field: gpd.array.GeometryDtype,
+        # Check numeric columns
+        numeric_columns = [self._spathlen_field, self._darea2_field]
+        for column in numeric_columns:
+            if not _is_convertible_to_float64(self.gdf, column):
+                raise TypeError(f"Column '{column}' has type {self.gdf[column].dtype} which cannot be safely converted to float64. Supported types are: {_safe_dtypes}.")
+
+            # Convert to float64 if not already
+            if self.gdf[column].dtype != "float64":
+                self.gdf[column] = self.gdf[column].astype("float64")
+
 
         # Check for duplicate LinkID values
         link_id_counts = self.gdf[self._linkid_field].value_counts()
