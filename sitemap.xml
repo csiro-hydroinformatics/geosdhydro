@@ -2,38 +2,46 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://csiro-hydroinformatics.github.io/geosdhydro/</loc>
-         <lastmod>2025-08-07</lastmod>
+         <lastmod>2025-09-10</lastmod>
     </url>
     <url>
          <loc>https://csiro-hydroinformatics.github.io/geosdhydro/changelog/</loc>
-         <lastmod>2025-08-07</lastmod>
+         <lastmod>2025-09-10</lastmod>
     </url>
     <url>
          <loc>https://csiro-hydroinformatics.github.io/geosdhydro/code_of_conduct/</loc>
-         <lastmod>2025-08-07</lastmod>
+         <lastmod>2025-09-10</lastmod>
     </url>
     <url>
          <loc>https://csiro-hydroinformatics.github.io/geosdhydro/contributing/</loc>
-         <lastmod>2025-08-07</lastmod>
+         <lastmod>2025-09-10</lastmod>
     </url>
     <url>
          <loc>https://csiro-hydroinformatics.github.io/geosdhydro/credits/</loc>
-         <lastmod>2025-08-07</lastmod>
+         <lastmod>2025-09-10</lastmod>
     </url>
     <url>
          <loc>https://csiro-hydroinformatics.github.io/geosdhydro/license/</loc>
-         <lastmod>2025-08-07</lastmod>
+         <lastmod>2025-09-10</lastmod>
     </url>
     <url>
          <loc>https://csiro-hydroinformatics.github.io/geosdhydro/nb/basic_usage/</loc>
-         <lastmod>2025-08-07</lastmod>
+         <lastmod>2025-09-10</lastmod>
+    </url>
+    <url>
+         <loc>https://csiro-hydroinformatics.github.io/geosdhydro/nb/lachlan/</loc>
+         <lastmod>2025-09-10</lastmod>
+    </url>
+    <url>
+         <loc>https://csiro-hydroinformatics.github.io/geosdhydro/nb/load_lachlan/</loc>
+         <lastmod>2025-09-10</lastmod>
     </url>
     <url>
          <loc>https://csiro-hydroinformatics.github.io/geosdhydro/reference/api/</loc>
-         <lastmod>2025-08-07</lastmod>
+         <lastmod>2025-09-10</lastmod>
     </url>
     <url>
          <loc>https://csiro-hydroinformatics.github.io/geosdhydro/coverage/</loc>
-         <lastmod>2025-08-07</lastmod>
+         <lastmod>2025-09-10</lastmod>
     </url>
 </urlset>
