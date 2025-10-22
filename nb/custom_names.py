@@ -40,7 +40,7 @@ data = {
     "FromNodeID": ["2", "3", "4", "5", "6"],  # As strings
     "ToNodeID": [1, 2, 2, 2, 5],
     "SPathLen": [1000.0, 1500.0, 2000.0, 800.0, 1200.0],
-    "DArea2": [3000000.0, 4000000.0, 2500000.0, -1.0, 3500000.0],  # Link 4 has negative area
+    "DArea": [3000000.0, 4000000.0, 2500000.0, -1.0, 3500000.0],  # Link 4 has negative area
     "geometry": [
         LineString([(2.1, 2.2), (1.1, 1.2)]),  # Link 1: node 2 -> node 1
         LineString([(3.1, 3.2), (2.1, 2.2)]),  # Link 2: node 3 -> node 2

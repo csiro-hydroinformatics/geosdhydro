@@ -69,7 +69,7 @@ converter = ShapefileToSwiftConverter(
     fromnodeid_field = "FromNodeID",
     tonodeid_field = "ToNodeID",
     spathlen_field = "SPathLen",
-    darea2_field = "DArea",
+    darea_field = "DArea",
     geometry_field = "geometry",
 )
 

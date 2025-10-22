@@ -23,7 +23,7 @@ ShapefileToSwiftConverter(
     fromnodeid_field: str = "FromNodeID",
     tonodeid_field: str = "ToNodeID",
     spathlen_field: str = "SPathLen",
-    darea2_field: str = "DArea2",
+    darea_field: str = "DArea",
     geometry_field: str = "geometry",
     linkname_field: Optional[str] = None,
     subarea_name_field: Optional[str] = None,
@@ -42,7 +42,7 @@ Parameters:
 - **`fromnodeid_field`** (`str`, default: `'FromNodeID'` ) – Name of the column containing From Node IDs
 - **`tonodeid_field`** (`str`, default: `'ToNodeID'` ) – Name of the column containing To Node IDs
 - **`spathlen_field`** (`str`, default: `'SPathLen'` ) – Name of the column containing Stream Path Lengths (in meters)
-- **`darea2_field`** (`str`, default: `'DArea2'` ) – Name of the column containing Subarea Drainage Area (in square meters)
+- **`darea_field`** (`str`, default: `'DArea'` ) – Name of the column containing Subarea Drainage Area (in square meters)
 - **`geometry_field`** (`str`, default: `'geometry'` ) – Name of the column containing geometry data
 - **`linkname_field`** (`Optional[str]`, default: `None` ) – Name of the column containing Link Names (optional)
 - **`subarea_name_field`** (`Optional[str]`, default: `None` ) – Name of the column containing SubArea Names (optional)
@@ -71,11 +71,11 @@ def __init__(
     fromnodeid_field: str = "FromNodeID",
     tonodeid_field: str = "ToNodeID",
     spathlen_field: str = "SPathLen",
-    darea2_field: str = "DArea2",
+    darea_field: str = "DArea",
     geometry_field: str = "geometry",
     linkname_field: Optional[str] = None,
     subarea_name_field: Optional[str] = None,
-    node_names: Optional[Dict[str,str]] = None,
+    node_names: Optional[Dict[str, str]] = None,
 ):
     """Initialize converter with geopandas dataframe.
 
@@ -86,7 +86,7 @@ def __init__(
         fromnodeid_field: Name of the column containing From Node IDs
         tonodeid_field: Name of the column containing To Node IDs
         spathlen_field: Name of the column containing Stream Path Lengths (in meters)
-        darea2_field: Name of the column containing Subarea Drainage Area (in square meters)
+        darea_field: Name of the column containing Subarea Drainage Area (in square meters)
         geometry_field: Name of the column containing geometry data
         linkname_field: Name of the column containing Link Names (optional)
         subarea_name_field: Name of the column containing SubArea Names (optional)
@@ -98,7 +98,7 @@ def __init__(
     self._fromnodeid_field = fromnodeid_field if fromnodeid_field else _default_fromnodeid_field
     self._tonodeid_field = tonodeid_field if tonodeid_field else _default_tonodeid_field
     self._spathlen_field = spathlen_field if spathlen_field else _default_spathlen_field
-    self._darea2_field = darea2_field if darea2_field else _default_darea2_field
+    self._darea_field = darea_field if darea_field else _default_darea_field
     self._geometry_field = geometry_field if geometry_field else _default_geometry_field
     self._linkname_field = linkname_field
     self._subarea_name_field = subarea_name_field
