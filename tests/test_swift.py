@@ -15,7 +15,7 @@ def test_one_link_two_nodes_one_subarea() -> None:
         "FromNodeID": [1],
         "ToNodeID": [2],
         "SPathLen": [1000.0],
-        "DArea2": [5000000.0],  # 5 km² in m²
+        "DArea": [5000000.0],  # 5 km² in m²
         "geometry": [LineString([(1.1, 1.2), (2.1, 2.2)])],
     }
     gdf = gpd.GeoDataFrame(data)
@@ -56,7 +56,7 @@ def test_one_link_two_nodes_no_subarea() -> None:
         "FromNodeID": [1],
         "ToNodeID": [2],
         "SPathLen": [1500.0],
-        "DArea2": [-1.0],  # Negative value means no subarea
+        "DArea": [-1.0],  # Negative value means no subarea
         "geometry": [LineString([(1.1, 1.2), (2.1, 2.2)])],
     }
     gdf = gpd.GeoDataFrame(data)
@@ -89,7 +89,7 @@ def test_coordinates_included() -> None:
         "FromNodeID": [1],
         "ToNodeID": [2],
         "SPathLen": [1000.0],
-        "DArea2": [5000000.0],
+        "DArea": [5000000.0],
         "geometry": [LineString([(1.1, 1.2), (2.1, 2.2)])],
     }
     gdf = gpd.GeoDataFrame(data)
@@ -121,7 +121,7 @@ def test_complex_catchment_structure() -> None:
         "FromNodeID": [2, 3, 4, 5, 6],
         "ToNodeID": [1, 2, 2, 2, 5],
         "SPathLen": [1000.0, 1500.0, 2000.0, 800.0, 1200.0],
-        "DArea2": [3000000.0, 4000000.0, 2500000.0, -1.0, 3500000.0],  # Link 4 has negative area
+        "DArea": [3000000.0, 4000000.0, 2500000.0, -1.0, 3500000.0],  # Link 4 has negative area
         "geometry": [
             LineString([(2.1, 2.2), (1.1, 1.2)]),  # Link 1: node 2 -> node 1
             LineString([(3.1, 3.2), (2.1, 2.2)]),  # Link 2: node 3 -> node 2
@@ -152,7 +152,6 @@ def test_complex_catchment_structure() -> None:
     assert "4" not in subarea_link_ids
 
 
-
 def test_invalid_spathlen_type() -> None:
     """Test that an exception is raised when spathlen is not a numeric type."""
     # Create test data with ToNodeID as float
@@ -160,8 +159,8 @@ def test_invalid_spathlen_type() -> None:
         "LinkID": [1],
         "FromNodeID": [1],
         "ToNodeID": ["2"],
-        "SPathLen": ["1000.0"], # valid, but wrong type, cannot be converted to float
-        "DArea2": [5000000.0],
+        "SPathLen": ["1000.0"],  # valid, but wrong type, cannot be converted to float
+        "DArea": [5000000.0],
         "geometry": [LineString([(1.1, 1.2), (2.1, 2.2)])],
     }
     gdf = gpd.GeoDataFrame(data)
@@ -178,7 +177,7 @@ def test_invalid_spathlenname_type() -> None:
         "FromNodeID": [1],
         "ToNodeID": ["2"],
         "SPathLen_WrongName": [1000.0],
-        "DArea2": [5000000.0],
+        "DArea": [5000000.0],
         "geometry": [LineString([(1.1, 1.2), (2.1, 2.2)])],
     }
     gdf = gpd.GeoDataFrame(data)
@@ -186,6 +185,7 @@ def test_invalid_spathlenname_type() -> None:
     # Expect a TypeError due to wrong column type
     with pytest.raises(ValueError):  # noqa: PT011
         ShapefileToSwiftConverter(gdf)
+
 
 def test_duplicate_link_ids() -> None:
     """Test that an exception is raised when LinkID column contains duplicate values."""
@@ -195,7 +195,7 @@ def test_duplicate_link_ids() -> None:
         "FromNodeID": [1, 2, 1, 3, 2, 2],
         "ToNodeID": [2, 3, 2, 4, 3, 3],
         "SPathLen": [1000.0, 1500.0, 1000.0, 2000.0, 1500.0, 1500.0],
-        "DArea2": [5000000.0, 4000000.0, 5000000.0, 3000000.0, 4000000.0, 4000000.0],
+        "DArea": [5000000.0, 4000000.0, 5000000.0, 3000000.0, 4000000.0, 4000000.0],
         "geometry": [
             LineString([(1.1, 1.2), (2.1, 2.2)]),
             LineString([(2.1, 2.2), (3.1, 3.2)]),
@@ -214,6 +214,7 @@ def test_duplicate_link_ids() -> None:
     # Check the error message
     assert "Column 'LinkID' contains duplicate values: ['2', '1'] at indices" in str(excinfo.value)
 
+
 def test_valid_numeric_types() -> None:
     """Test that valid numeric types for SPathLen and DArea2 columns are accepted."""
     # Create test data with various numeric types
@@ -223,7 +224,7 @@ def test_valid_numeric_types() -> None:
             "FromNodeID": [1],
             "ToNodeID": [2],
             "SPathLen": [t(1000)],
-            "DArea2": [t(64000)],  # Valid numeric type, small enough to fit in uint16
+            "DArea": [t(64000)],  # Valid numeric type, small enough to fit in uint16
             "geometry": [LineString([(1.1, 1.2), (2.1, 2.2)])],
         }
         gdf = gpd.GeoDataFrame(data)
@@ -253,7 +254,7 @@ def test_invalid_numeric_types() -> None:
         "FromNodeID": [1],
         "ToNodeID": [2],
         "SPathLen": ["not-a-number"],  # String that can't be converted to float
-        "DArea2": [5000000.0],
+        "DArea": [5000000.0],
         "geometry": [LineString([(1.1, 1.2), (2.1, 2.2)])],
     }
     gdf1 = gpd.GeoDataFrame(data1)
@@ -265,7 +266,7 @@ def test_invalid_numeric_types() -> None:
         "FromNodeID": [1],
         "ToNodeID": [2],
         "SPathLen": [1000.0],
-        "DArea2": [True],  # Boolean value
+        "DArea": [True],  # Boolean value
         "geometry": [LineString([(1.1, 1.2), (2.1, 2.2)])],
     }
     gdf2 = gpd.GeoDataFrame(data2)
@@ -277,7 +278,7 @@ def test_invalid_numeric_types() -> None:
         "FromNodeID": [1],
         "ToNodeID": [2],
         "SPathLen": [1000.0],
-        "DArea2": [pd.Series([1, 2, 3])],  # A pandas Series object
+        "DArea": [pd.Series([1, 2, 3])],  # A pandas Series object
         "geometry": [LineString([(1.1, 1.2), (2.1, 2.2)])],
     }
     gdf3 = gpd.GeoDataFrame(data3)
@@ -289,13 +290,14 @@ def test_invalid_numeric_types() -> None:
         "FromNodeID": [1],
         "ToNodeID": [2],
         "SPathLen": [np.datetime64("2023-01-01")],  # Datetime object
-        "DArea2": [5000000.0],
+        "DArea": [5000000.0],
         "geometry": [LineString([(1.1, 1.2), (2.1, 2.2)])],
     }
     gdf4 = gpd.GeoDataFrame(data4)
 
     with pytest.raises(TypeError):
         ShapefileToSwiftConverter(gdf4)
+
 
 def test_element_names() -> None:
     """Test default/custom names for the elements."""
@@ -305,7 +307,7 @@ def test_element_names() -> None:
         "FromNodeID": [2, 3, 4, 5, 6],
         "ToNodeID": [1, 2, 2, 2, 5],
         "SPathLen": [1000.0, 1500.0, 2000.0, 800.0, 1200.0],
-        "DArea2": [3000000.0, 4000000.0, 2500000.0, -1.0, 3500000.0],  # Link 4 has negative area
+        "DArea": [3000000.0, 4000000.0, 2500000.0, -1.0, 3500000.0],  # Link 4 has negative area
         "geometry": [
             LineString([(2.1, 2.2), (1.1, 1.2)]),  # Link 1: node 2 -> node 1
             LineString([(3.1, 3.2), (2.1, 2.2)]),  # Link 2: node 3 -> node 2
@@ -350,10 +352,10 @@ def test_element_names() -> None:
     result = converter.convert()
 
     # Assertions for custom link names
-    assert all(link["Name"] == f"CustomLinkName_{int(link['ID'])-1}" for link in result["Links"])
+    assert all(link["Name"] == f"CustomLinkName_{int(link['ID']) - 1}" for link in result["Links"])
 
     # Assertions for custom node names
     assert all(node["Name"] == f"CustomNodeName_{node['ID']}" for node in result["Nodes"])
 
     # Assertions for custom subarea names
-    assert all(subarea["Name"] == f"CustomSubAreaName_{int(subarea['ID'])-1}" for subarea in result["SubAreas"])
+    assert all(subarea["Name"] == f"CustomSubAreaName_{int(subarea['ID']) - 1}" for subarea in result["SubAreas"])

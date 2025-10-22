@@ -184,7 +184,6 @@ def release(ctx: Context, version: str = "") -> None:
     ctx.run("git push --tags", title="Pushing tags", pty=False)
 
 
-
 @duty
 def tag(ctx: Context, version: str = "") -> None:
     """Tag a new version.
