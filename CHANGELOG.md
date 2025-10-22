@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Code Refactoring
 
-- change the parameter name and default values for retrieving the subarea area from 'DArea2' to 'DArea' ([ac4e312](https://github.com/csiro-hydroinformatics/geosdhydro/commit/ac4e3126f6c5b372e39c45b6ad9e681f62e64727) by J-M). Fixes: #6
+- change the parameter name and default values for retrieving the subarea area from 'DArea2' to 'DArea' ([ac4e312](https://github.com/csiro-hydroinformatics/geosdhydro/commit/ac4e3126f6c5b372e39c45b6ad9e681f62e64727) by J-M). Request from James. Fixes: #6
 
 ## [0.4.0](https://github.com/csiro-hydroinformatics/geosdhydro/releases/tag/0.4.0) - 2025-09-10
 
