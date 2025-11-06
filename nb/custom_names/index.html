@@ -24,7 +24,7 @@
     
     
       
-        <title>Custom names for links, nodes, subareas - geosdhydro</title>
+        <title>Custom names and IDs for links, nodes, subareas - geosdhydro</title>
       
     
     
@@ -84,7 +84,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#custom-names-for-links-nodes-subareas" class="md-skip">
+        <a href="#custom-names-and-ids-for-links-nodes-subareas" class="md-skip">
           Skip to content
         </a>
       
@@ -120,7 +120,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Custom names for links, nodes, subareas
+              Custom names and IDs for links, nodes, subareas
             
           </span>
         </div>
@@ -643,7 +643,7 @@
   
   
   <span class="md-ellipsis">
-    Custom names for links, nodes, subareas
+    Custom names and IDs for links, nodes, subareas
     
   </span>
   
@@ -656,7 +656,7 @@
   
   
   <span class="md-ellipsis">
-    Custom names for links, nodes, subareas
+    Custom names and IDs for links, nodes, subareas
     
   </span>
   
@@ -682,6 +682,24 @@
   <a href="#create-synthetic-test-data" class="md-nav__link">
     <span class="md-ellipsis">
       Create synthetic test data
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#creation-of-the-swift-json-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      Creation of the swift JSON structure
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#full-json-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      Full JSON file
     </span>
   </a>
   
@@ -874,6 +892,24 @@
   <a href="#create-synthetic-test-data" class="md-nav__link">
     <span class="md-ellipsis">
       Create synthetic test data
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#creation-of-the-swift-json-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      Creation of the swift JSON structure
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#full-json-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      Full JSON file
     </span>
   </a>
   
@@ -1353,7 +1389,8 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h1 id="custom-names-for-links-nodes-subareas">Custom names for links, nodes, subareas<a class="anchor-link" href="#custom-names-for-links-nodes-subareas">¶</a></h1><p>This is a sample notebook demonstrating how to use the <code>ShapefileToSwiftConverter</code> class from the <code>geosdhydro</code> package to convert a shapefile with custom names for links, nodes, and subareas into a JSON format compatible with the <code>swift2</code> hydrological modeling framework.</p>
+<h1 id="custom-names-and-ids-for-links-nodes-subareas">Custom names and IDs for links, nodes, subareas<a class="anchor-link" href="#custom-names-and-ids-for-links-nodes-subareas">¶</a></h1><p>This is a sample notebook demonstrating how to use the <code>ShapefileToSwiftConverter</code> class from the <code>geosdhydro</code> package to convert a shapefile with custom names and custom IDs for links, nodes, and subareas into a JSON format compatible with the <code>swift2</code> hydrological modeling framework.</p>
+<p>We demonstrate custom IDs for subareas only for the sake of conciseness, but custom IDs for links is similarly possible.</p>
 </div>
 </div>
 </div>
@@ -1428,9 +1465,9 @@ from geosdhydro import ShapefileToSwiftConverter</div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">"LinkID"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"1"</span><span class="p">,</span> <span class="s2">"2"</span><span class="p">,</span> <span class="s2">"3"</span><span class="p">,</span> <span class="s2">"4"</span><span class="p">,</span> <span class="s2">"5"</span><span class="p">],</span>  <span class="c1"># As strings</span>
     <span class="s2">"FromNodeID"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"2"</span><span class="p">,</span> <span class="s2">"3"</span><span class="p">,</span> <span class="s2">"4"</span><span class="p">,</span> <span class="s2">"5"</span><span class="p">,</span> <span class="s2">"6"</span><span class="p">],</span>  <span class="c1"># As strings</span>
-    <span class="s2">"ToNodeID"</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span>
+    <span class="s2">"ToNodeID"</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="c1"># we tolerate ints, they are stringified by the converter</span>
     <span class="s2">"SPathLen"</span><span class="p">:</span> <span class="p">[</span><span class="mf">1000.0</span><span class="p">,</span> <span class="mf">1500.0</span><span class="p">,</span> <span class="mf">2000.0</span><span class="p">,</span> <span class="mf">800.0</span><span class="p">,</span> <span class="mf">1200.0</span><span class="p">],</span>
-    <span class="s2">"DArea2"</span><span class="p">:</span> <span class="p">[</span><span class="mf">3000000.0</span><span class="p">,</span> <span class="mf">4000000.0</span><span class="p">,</span> <span class="mf">2500000.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">3500000.0</span><span class="p">],</span>  <span class="c1"># Link 4 has negative area</span>
+    <span class="s2">"DArea2"</span><span class="p">:</span> <span class="p">[</span><span class="mf">3000000.0</span><span class="p">,</span> <span class="mf">4000000.0</span><span class="p">,</span> <span class="mf">2500000.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">3500000.0</span><span class="p">],</span>  <span class="c1"># Link 4, or rather subarea sa4, has negative area</span>
     <span class="s2">"geometry"</span><span class="p">:</span> <span class="p">[</span>
         <span class="n">LineString</span><span class="p">([(</span><span class="mf">2.1</span><span class="p">,</span> <span class="mf">2.2</span><span class="p">),</span> <span class="p">(</span><span class="mf">1.1</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">)]),</span>  <span class="c1"># Link 1: node 2 -&gt; node 1</span>
         <span class="n">LineString</span><span class="p">([(</span><span class="mf">3.1</span><span class="p">,</span> <span class="mf">3.2</span><span class="p">),</span> <span class="p">(</span><span class="mf">2.1</span><span class="p">,</span> <span class="mf">2.2</span><span class="p">)]),</span>  <span class="c1"># Link 2: node 3 -&gt; node 2</span>
@@ -1443,9 +1480,9 @@ from geosdhydro import ShapefileToSwiftConverter</div>
 <div class="clipboard-copy-txt" id="cell-2">data = {
     "LinkID": ["1", "2", "3", "4", "5"],  # As strings
     "FromNodeID": ["2", "3", "4", "5", "6"],  # As strings
-    "ToNodeID": [1, 2, 2, 2, 5],
+    "ToNodeID": [1, 2, 2, 2, 5], # we tolerate ints, they are stringified by the converter
     "SPathLen": [1000.0, 1500.0, 2000.0, 800.0, 1200.0],
-    "DArea2": [3000000.0, 4000000.0, 2500000.0, -1.0, 3500000.0],  # Link 4 has negative area
+    "DArea2": [3000000.0, 4000000.0, 2500000.0, -1.0, 3500000.0],  # Link 4, or rather subarea sa4, has negative area
     "geometry": [
         LineString([(2.1, 2.2), (1.1, 1.2)]),  # Link 1: node 2 -&gt; node 1
         LineString([(3.1, 3.2), (2.1, 2.2)]),  # Link 2: node 3 -&gt; node 2
@@ -1495,6 +1532,10 @@ from geosdhydro import ShapefileToSwiftConverter</div>
 <span class="c1"># Custom names for subareas</span>
 <span class="n">custom_subarea_name_fieldname</span> <span class="o">=</span> <span class="s2">"SubAreaName"</span>
 <span class="n">data</span><span class="p">[</span><span class="n">custom_subarea_name_fieldname</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">"CustomSubAreaName_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">)]</span>
+
+<span class="n">custom_subarea_id_fieldname</span> <span class="o">=</span> <span class="s2">"CustomSubareaID"</span>
+<span class="n">data</span><span class="p">[</span><span class="n">custom_subarea_id_fieldname</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"sa1"</span><span class="p">,</span> <span class="s2">"sa2"</span><span class="p">,</span> <span class="s2">"sa3"</span><span class="p">,</span> <span class="s2">"sa4"</span><span class="p">,</span> <span class="s2">"sa5"</span><span class="p">]</span>  <span class="c1"># As strings</span>
+
 <span class="n">gdf</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">GeoDataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 
 <span class="n">gdf</span>
@@ -1505,6 +1546,10 @@ data[custom_linkname_fieldname] = [f"CustomLinkName_{i}" for i in range(5)]
 # Custom names for subareas
 custom_subarea_name_fieldname = "SubAreaName"
 data[custom_subarea_name_fieldname] = [f"CustomSubAreaName_{i}" for i in range(5)]
+
+custom_subarea_id_fieldname = "CustomSubareaID"
+data[custom_subarea_id_fieldname] = ["sa1", "sa2", "sa3", "sa4", "sa5"]  # As strings
+
 gdf = gpd.GeoDataFrame(data)
 
 gdf</div>
@@ -1545,6 +1590,7 @@ gdf</div>
 <th>geometry</th>
 <th>LinkName</th>
 <th>SubAreaName</th>
+<th>CustomSubareaID</th>
 </tr>
 </thead>
 <tbody>
@@ -1558,6 +1604,7 @@ gdf</div>
 <td>LINESTRING (2.1 2.2, 1.1 1.2)</td>
 <td>CustomLinkName_0</td>
 <td>CustomSubAreaName_0</td>
+<td>sa1</td>
 </tr>
 <tr>
 <th>1</th>
@@ -1569,6 +1616,7 @@ gdf</div>
 <td>LINESTRING (3.1 3.2, 2.1 2.2)</td>
 <td>CustomLinkName_1</td>
 <td>CustomSubAreaName_1</td>
+<td>sa2</td>
 </tr>
 <tr>
 <th>2</th>
@@ -1580,6 +1628,7 @@ gdf</div>
 <td>LINESTRING (4.1 4.2, 2.1 2.2)</td>
 <td>CustomLinkName_2</td>
 <td>CustomSubAreaName_2</td>
+<td>sa3</td>
 </tr>
 <tr>
 <th>3</th>
@@ -1591,6 +1640,7 @@ gdf</div>
 <td>LINESTRING (5.1 5.2, 2.1 2.2)</td>
 <td>CustomLinkName_3</td>
 <td>CustomSubAreaName_3</td>
+<td>sa4</td>
 </tr>
 <tr>
 <th>4</th>
@@ -1602,6 +1652,7 @@ gdf</div>
 <td>LINESTRING (6.1 6.2, 5.1 5.2)</td>
 <td>CustomLinkName_4</td>
 <td>CustomSubAreaName_4</td>
+<td>sa5</td>
 </tr>
 </tbody>
 </table>
@@ -1611,8 +1662,8 @@ gdf</div>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=eaa88ddc">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=eaa88ddc">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -1630,13 +1681,43 @@ gdf</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Custom node names</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Custom node names: we map from the node IDs to custom names</span>
 <span class="n">custom_nodenames</span> <span class="o">=</span> <span class="p">{</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">):</span> <span class="sa">f</span><span class="s2">"CustomNodeName_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">7</span><span class="p">)}</span>
+<span class="n">custom_nodenames</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-4"># Custom node names
-custom_nodenames = {str(i): f"CustomNodeName_{i}" for i in range(1, 7)}</div>
+<div class="clipboard-copy-txt" id="cell-4"># Custom node names: we map from the node IDs to custom names
+custom_nodenames = {str(i): f"CustomNodeName_{i}" for i in range(1, 7)}
+custom_nodenames</div>
 </div>
 </div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[4]:</div>
+<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
+<pre>{'1': 'CustomNodeName_1',
+ '2': 'CustomNodeName_2',
+ '3': 'CustomNodeName_3',
+ '4': 'CustomNodeName_4',
+ '5': 'CustomNodeName_5',
+ '6': 'CustomNodeName_6'}</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=128a7a9e">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h2 id="creation-of-the-swift-json-structure">Creation of the swift JSON structure<a class="anchor-link" href="#creation-of-the-swift-json-structure">¶</a></h2>
 </div>
 </div>
 </div>
@@ -1646,7 +1727,7 @@ custom_nodenames = {str(i): f"CustomNodeName_{i}" for i in range(1, 7)}</div>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [5]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
 <clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-5">
@@ -1663,6 +1744,7 @@ custom_nodenames = {str(i): f"CustomNodeName_{i}" for i in range(1, 7)}</div>
     <span class="n">gdf</span><span class="p">,</span>
     <span class="n">linkname_field</span><span class="o">=</span><span class="n">custom_linkname_fieldname</span><span class="p">,</span>
     <span class="n">subarea_name_field</span><span class="o">=</span><span class="n">custom_subarea_name_fieldname</span><span class="p">,</span>
+    <span class="n">subareaid_field</span><span class="o">=</span><span class="n">custom_subarea_id_fieldname</span><span class="p">,</span>
     <span class="n">node_names</span><span class="o">=</span><span class="n">custom_nodenames</span><span class="p">,</span>
     <span class="n">darea_field</span><span class="o">=</span><span class="s2">"DArea2"</span><span class="p">,</span>
 <span class="p">)</span>
@@ -1672,6 +1754,7 @@ custom_nodenames = {str(i): f"CustomNodeName_{i}" for i in range(1, 7)}</div>
     gdf,
     linkname_field=custom_linkname_fieldname,
     subarea_name_field=custom_subarea_name_fieldname,
+    subareaid_field=custom_subarea_id_fieldname,
     node_names=custom_nodenames,
     darea_field="DArea2",
 )
@@ -1862,13 +1945,24 @@ result = converter.convert()</div>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=4cd4932e">
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=ca7425d5">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p>And, since we specified a custom field for subarea IDs, let us check this is distinct from the link IDs (default)</p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=dc836af3">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [10]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
 <clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-10">
@@ -1881,9 +1975,272 @@ result = converter.convert()</div>
 </div>
 </clipboard-copy>
 </div>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="s1">'ID'</span><span class="p">]</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span>  <span class="n">result</span><span class="p">[</span><span class="s2">"SubAreas"</span><span class="p">]]</span>
+</pre></div>
+<div class="clipboard-copy-txt" id="cell-10">[s['ID'] for s in  result["SubAreas"]]</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[10]:</div>
+<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
+<pre>['sa1', 'sa2', 'sa3', 'sa5']</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=d69892bf">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p>distinct from:</p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=106017de">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [11]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="CodeMirror cm-s-jupyter">
+<div class="zeroclipboard-container">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-11">
+<div>
+<span class="notice" hidden="">Copied!</span>
+<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
+<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+</clipboard-copy>
+</div>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="s1">'ID'</span><span class="p">]</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span>  <span class="n">result</span><span class="p">[</span><span class="s2">"Links"</span><span class="p">]]</span>
+</pre></div>
+<div class="clipboard-copy-txt" id="cell-11">[s['ID'] for s in  result["Links"]]</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[11]:</div>
+<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
+<pre>['1', '2', '3', '4', '5']</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=0fa04515">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h2 id="full-json-file">Full JSON file<a class="anchor-link" href="#full-json-file">¶</a></h2><p>The serialised file would look like:</p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=0ae50fa4">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [12]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="CodeMirror cm-s-jupyter">
+<div class="zeroclipboard-container">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-12">
+<div>
+<span class="notice" hidden="">Copied!</span>
+<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
+<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+</clipboard-copy>
+</div>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">result</span>
+</pre></div>
+<div class="clipboard-copy-txt" id="cell-12">result</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[12]:</div>
+<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
+<pre>{'Links': [{'ChannelRouting': {'ChannelRoutingType': 'NoRouting'},
+   'DownstreamNodeID': '1',
+   'ID': '1',
+   'Length': 1000.0,
+   'ManningsN': 1.0,
+   'Name': 'CustomLinkName_0',
+   'Slope': 1.0,
+   'UpstreamNodeID': '2',
+   'f': 1.0},
+  {'ChannelRouting': {'ChannelRoutingType': 'NoRouting'},
+   'DownstreamNodeID': '2',
+   'ID': '2',
+   'Length': 1500.0,
+   'ManningsN': 1.0,
+   'Name': 'CustomLinkName_1',
+   'Slope': 1.0,
+   'UpstreamNodeID': '3',
+   'f': 1.0},
+  {'ChannelRouting': {'ChannelRoutingType': 'NoRouting'},
+   'DownstreamNodeID': '2',
+   'ID': '3',
+   'Length': 2000.0,
+   'ManningsN': 1.0,
+   'Name': 'CustomLinkName_2',
+   'Slope': 1.0,
+   'UpstreamNodeID': '4',
+   'f': 1.0},
+  {'ChannelRouting': {'ChannelRoutingType': 'NoRouting'},
+   'DownstreamNodeID': '2',
+   'ID': '4',
+   'Length': 800.0,
+   'ManningsN': 1.0,
+   'Name': 'CustomLinkName_3',
+   'Slope': 1.0,
+   'UpstreamNodeID': '5',
+   'f': 1.0},
+  {'ChannelRouting': {'ChannelRoutingType': 'NoRouting'},
+   'DownstreamNodeID': '5',
+   'ID': '5',
+   'Length': 1200.0,
+   'ManningsN': 1.0,
+   'Name': 'CustomLinkName_4',
+   'Slope': 1.0,
+   'UpstreamNodeID': '6',
+   'f': 1.0}],
+ 'Nodes': [{'ErrorCorrection': {'ErrorCorrectionType': 'NoErrorCorrection'},
+   'ID': '1',
+   'Name': 'CustomNodeName_1',
+   'Reservoir': {'ReservoirType': 'NoReservoir'}},
+  {'ErrorCorrection': {'ErrorCorrectionType': 'NoErrorCorrection'},
+   'ID': '2',
+   'Name': 'CustomNodeName_2',
+   'Reservoir': {'ReservoirType': 'NoReservoir'}},
+  {'ErrorCorrection': {'ErrorCorrectionType': 'NoErrorCorrection'},
+   'ID': '3',
+   'Name': 'CustomNodeName_3',
+   'Reservoir': {'ReservoirType': 'NoReservoir'}},
+  {'ErrorCorrection': {'ErrorCorrectionType': 'NoErrorCorrection'},
+   'ID': '4',
+   'Name': 'CustomNodeName_4',
+   'Reservoir': {'ReservoirType': 'NoReservoir'}},
+  {'ErrorCorrection': {'ErrorCorrectionType': 'NoErrorCorrection'},
+   'ID': '5',
+   'Name': 'CustomNodeName_5',
+   'Reservoir': {'ReservoirType': 'NoReservoir'}},
+  {'ErrorCorrection': {'ErrorCorrectionType': 'NoErrorCorrection'},
+   'ID': '6',
+   'Name': 'CustomNodeName_6',
+   'Reservoir': {'ReservoirType': 'NoReservoir'}}],
+ 'SubAreas': [{'AreaKm2': 3.0,
+   'ID': 'sa1',
+   'LinkID': '1',
+   'Name': 'CustomSubAreaName_0',
+   'RunoffModel': {'PercFactor': 2.25,
+    'R': 0.0,
+    'RunoffModelType': 'GR4J',
+    'S': 0.0,
+    'SurfaceRunoffRouting': {'SurfaceRunoffRoutingType': 'NoRouting'},
+    'UHExponent': 2.5,
+    'x1': 350.0,
+    'x2': 0.0,
+    'x3': 40.0,
+    'x4': 0.5}},
+  {'AreaKm2': 4.0,
+   'ID': 'sa2',
+   'LinkID': '2',
+   'Name': 'CustomSubAreaName_1',
+   'RunoffModel': {'PercFactor': 2.25,
+    'R': 0.0,
+    'RunoffModelType': 'GR4J',
+    'S': 0.0,
+    'SurfaceRunoffRouting': {'SurfaceRunoffRoutingType': 'NoRouting'},
+    'UHExponent': 2.5,
+    'x1': 350.0,
+    'x2': 0.0,
+    'x3': 40.0,
+    'x4': 0.5}},
+  {'AreaKm2': 2.5,
+   'ID': 'sa3',
+   'LinkID': '3',
+   'Name': 'CustomSubAreaName_2',
+   'RunoffModel': {'PercFactor': 2.25,
+    'R': 0.0,
+    'RunoffModelType': 'GR4J',
+    'S': 0.0,
+    'SurfaceRunoffRouting': {'SurfaceRunoffRoutingType': 'NoRouting'},
+    'UHExponent': 2.5,
+    'x1': 350.0,
+    'x2': 0.0,
+    'x3': 40.0,
+    'x4': 0.5}},
+  {'AreaKm2': 3.5,
+   'ID': 'sa5',
+   'LinkID': '5',
+   'Name': 'CustomSubAreaName_4',
+   'RunoffModel': {'PercFactor': 2.25,
+    'R': 0.0,
+    'RunoffModelType': 'GR4J',
+    'S': 0.0,
+    'SurfaceRunoffRouting': {'SurfaceRunoffRoutingType': 'NoRouting'},
+    'UHExponent': 2.5,
+    'x1': 350.0,
+    'x2': 0.0,
+    'x3': 40.0,
+    'x4': 0.5}}]}</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=d0e3b2bb">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="CodeMirror cm-s-jupyter">
+<div class="zeroclipboard-container">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-13">
+<div>
+<span class="notice" hidden="">Copied!</span>
+<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
+<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+</clipboard-copy>
+</div>
 <div class="highlight-ipynb hl-python"><pre><span></span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-10"></div>
+<div class="clipboard-copy-txt" id="cell-13"></div>
 </div>
 </div>
 </div>

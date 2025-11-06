@@ -629,7 +629,7 @@
   
   
   <span class="md-ellipsis">
-    Custom names for links, nodes, subareas
+    Custom names and IDs for links, nodes, subareas
     
   </span>
   
@@ -1145,6 +1145,7 @@
     <span class="n">linkid_field</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></span> <span class="o">=</span> <span class="s2">&quot;LinkID&quot;</span><span class="p">,</span>
     <span class="n">fromnodeid_field</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></span> <span class="o">=</span> <span class="s2">&quot;FromNodeID&quot;</span><span class="p">,</span>
     <span class="n">tonodeid_field</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></span> <span class="o">=</span> <span class="s2">&quot;ToNodeID&quot;</span><span class="p">,</span>
+    <span class="n">subareaid_field</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></span> <span class="o">=</span> <span class="s2">&quot;LinkID&quot;</span><span class="p">,</span>
     <span class="n">spathlen_field</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></span> <span class="o">=</span> <span class="s2">&quot;SPathLen&quot;</span><span class="p">,</span>
     <span class="n">darea_field</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></span> <span class="o">=</span> <span class="s2">&quot;DArea&quot;</span><span class="p">,</span>
     <span class="n">geometry_field</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></span> <span class="o">=</span> <span class="s2">&quot;geometry&quot;</span><span class="p">,</span>
@@ -1209,6 +1210,16 @@
           –
           <div class="doc-md-description">
             <p>Name of the column containing To Node IDs</p>
+          </div>
+        </li>
+        <li class="doc-section-item field-body">
+            <b><code>subareaid_field</code></b>
+              (<code><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></code>, default:
+                  <code>&#39;LinkID&#39;</code>
+)
+          –
+          <div class="doc-md-description">
+            <p>Name of the column containing SubArea IDs (defaults to LinkID for backward compatibility)</p>
           </div>
         </li>
         <li class="doc-section-item field-body">
@@ -1342,7 +1353,8 @@
 
                   <details class="quote">
                     <summary>Source code in <code>src/geosdhydro/_internal/swift.py</code></summary>
-                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 56</span>
+                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 55</span>
+<span class="normal"> 56</span>
 <span class="normal"> 57</span>
 <span class="normal"> 58</span>
 <span class="normal"> 59</span>
@@ -1396,13 +1408,16 @@
 <span class="normal">107</span>
 <span class="normal">108</span>
 <span class="normal">109</span>
-<span class="normal">110</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">gdf</span><span class="p">:</span> <span class="n">gpd</span><span class="o">.</span><span class="n">GeoDataFrame</span><span class="p">,</span>
     <span class="n">include_coordinates</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>  <span class="c1"># noqa: FBT001, FBT002</span>
     <span class="n">linkid_field</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;LinkID&quot;</span><span class="p">,</span>
     <span class="n">fromnodeid_field</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;FromNodeID&quot;</span><span class="p">,</span>
     <span class="n">tonodeid_field</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;ToNodeID&quot;</span><span class="p">,</span>
+    <span class="n">subareaid_field</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;LinkID&quot;</span><span class="p">,</span>
     <span class="n">spathlen_field</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;SPathLen&quot;</span><span class="p">,</span>
     <span class="n">darea_field</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;DArea&quot;</span><span class="p">,</span>
     <span class="n">geometry_field</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;geometry&quot;</span><span class="p">,</span>
@@ -1418,6 +1433,7 @@
 <span class="sd">        linkid_field: Name of the column containing Link IDs</span>
 <span class="sd">        fromnodeid_field: Name of the column containing From Node IDs</span>
 <span class="sd">        tonodeid_field: Name of the column containing To Node IDs</span>
+<span class="sd">        subareaid_field: Name of the column containing SubArea IDs (defaults to LinkID for backward compatibility)</span>
 <span class="sd">        spathlen_field: Name of the column containing Stream Path Lengths (in meters)</span>
 <span class="sd">        darea_field: Name of the column containing Subarea Drainage Area (in square meters)</span>
 <span class="sd">        geometry_field: Name of the column containing geometry data</span>
@@ -1430,6 +1446,7 @@
     <span class="bp">self</span><span class="o">.</span><span class="n">_linkid_field</span> <span class="o">=</span> <span class="n">linkid_field</span> <span class="k">if</span> <span class="n">linkid_field</span> <span class="k">else</span> <span class="n">_default_linkid_field</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_fromnodeid_field</span> <span class="o">=</span> <span class="n">fromnodeid_field</span> <span class="k">if</span> <span class="n">fromnodeid_field</span> <span class="k">else</span> <span class="n">_default_fromnodeid_field</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_tonodeid_field</span> <span class="o">=</span> <span class="n">tonodeid_field</span> <span class="k">if</span> <span class="n">tonodeid_field</span> <span class="k">else</span> <span class="n">_default_tonodeid_field</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_subareaid_field</span> <span class="o">=</span> <span class="n">subareaid_field</span> <span class="k">if</span> <span class="n">subareaid_field</span> <span class="k">else</span> <span class="n">_default_linkid_field</span>  <span class="c1"># NEW LINE</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_spathlen_field</span> <span class="o">=</span> <span class="n">spathlen_field</span> <span class="k">if</span> <span class="n">spathlen_field</span> <span class="k">else</span> <span class="n">_default_spathlen_field</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_darea_field</span> <span class="o">=</span> <span class="n">darea_field</span> <span class="k">if</span> <span class="n">darea_field</span> <span class="k">else</span> <span class="n">_default_darea_field</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_geometry_field</span> <span class="o">=</span> <span class="n">geometry_field</span> <span class="k">if</span> <span class="n">geometry_field</span> <span class="k">else</span> <span class="n">_default_geometry_field</span>
@@ -1601,13 +1618,13 @@
 
             <details class="quote">
               <summary>Source code in <code>src/geosdhydro/_internal/swift.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">190</span>
-<span class="normal">191</span>
-<span class="normal">192</span>
-<span class="normal">193</span>
-<span class="normal">194</span>
-<span class="normal">195</span>
-<span class="normal">196</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert shapefile data to SWIFT JSON format.</span>
 
 <span class="sd">    Returns:</span>
@@ -1662,15 +1679,15 @@
 
             <details class="quote">
               <summary>Source code in <code>src/geosdhydro/_internal/swift.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">198</span>
-<span class="normal">199</span>
-<span class="normal">200</span>
-<span class="normal">201</span>
-<span class="normal">202</span>
-<span class="normal">203</span>
-<span class="normal">204</span>
-<span class="normal">205</span>
-<span class="normal">206</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">save_to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">indent</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">save_to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">indent</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Save converted data to JSON file.</span>
 
 <span class="sd">    Args:</span>
@@ -1933,7 +1950,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../../nb/custom_names/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Custom names for links, nodes, subareas">
+          <a href="../../nb/custom_names/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Custom names and IDs for links, nodes, subareas">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -1943,7 +1960,7 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                Custom names for links, nodes, subareas
+                Custom names and IDs for links, nodes, subareas
               </div>
             </div>
           </a>

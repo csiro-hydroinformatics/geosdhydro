@@ -22,6 +22,7 @@ ShapefileToSwiftConverter(
     linkid_field: str = "LinkID",
     fromnodeid_field: str = "FromNodeID",
     tonodeid_field: str = "ToNodeID",
+    subareaid_field: str = "LinkID",
     spathlen_field: str = "SPathLen",
     darea_field: str = "DArea",
     geometry_field: str = "geometry",
@@ -41,6 +42,7 @@ Parameters:
 - **`linkid_field`** (`str`, default: `'LinkID'` ) – Name of the column containing Link IDs
 - **`fromnodeid_field`** (`str`, default: `'FromNodeID'` ) – Name of the column containing From Node IDs
 - **`tonodeid_field`** (`str`, default: `'ToNodeID'` ) – Name of the column containing To Node IDs
+- **`subareaid_field`** (`str`, default: `'LinkID'` ) – Name of the column containing SubArea IDs (defaults to LinkID for backward compatibility)
 - **`spathlen_field`** (`str`, default: `'SPathLen'` ) – Name of the column containing Stream Path Lengths (in meters)
 - **`darea_field`** (`str`, default: `'DArea'` ) – Name of the column containing Subarea Drainage Area (in square meters)
 - **`geometry_field`** (`str`, default: `'geometry'` ) – Name of the column containing geometry data
@@ -70,6 +72,7 @@ def __init__(
     linkid_field: str = "LinkID",
     fromnodeid_field: str = "FromNodeID",
     tonodeid_field: str = "ToNodeID",
+    subareaid_field: str = "LinkID",
     spathlen_field: str = "SPathLen",
     darea_field: str = "DArea",
     geometry_field: str = "geometry",
@@ -85,6 +88,7 @@ def __init__(
         linkid_field: Name of the column containing Link IDs
         fromnodeid_field: Name of the column containing From Node IDs
         tonodeid_field: Name of the column containing To Node IDs
+        subareaid_field: Name of the column containing SubArea IDs (defaults to LinkID for backward compatibility)
         spathlen_field: Name of the column containing Stream Path Lengths (in meters)
         darea_field: Name of the column containing Subarea Drainage Area (in square meters)
         geometry_field: Name of the column containing geometry data
@@ -97,6 +101,7 @@ def __init__(
     self._linkid_field = linkid_field if linkid_field else _default_linkid_field
     self._fromnodeid_field = fromnodeid_field if fromnodeid_field else _default_fromnodeid_field
     self._tonodeid_field = tonodeid_field if tonodeid_field else _default_tonodeid_field
+    self._subareaid_field = subareaid_field if subareaid_field else _default_linkid_field  # NEW LINE
     self._spathlen_field = spathlen_field if spathlen_field else _default_spathlen_field
     self._darea_field = darea_field if darea_field else _default_darea_field
     self._geometry_field = geometry_field if geometry_field else _default_geometry_field
