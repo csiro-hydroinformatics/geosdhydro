@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 <!-- insertion marker -->
+## [0.5.0](https://github.com/csiro-hydroinformatics/geosdhydro/releases/tag/0.5.0) - 2025-11-06
+
+<small>[Compare with 0.4.2](https://github.com/csiro-hydroinformatics/geosdhydro/compare/0.4.2...0.5.0)</small>
+
+### Features
+
+- using a customisable column name for subarea IDs ([2af952a](https://github.com/csiro-hydroinformatics/geosdhydro/commit/2af952a2fb1322275119da3780912017ed04f79b) by J-M). fixes: #7
+
 ## [0.4.2](https://github.com/csiro-hydroinformatics/geosdhydro/releases/tag/0.4.2) - 2025-10-22
 
 <small>[Compare with 0.4.1](https://github.com/csiro-hydroinformatics/geosdhydro/compare/0.4.1...0.4.2)</small>
