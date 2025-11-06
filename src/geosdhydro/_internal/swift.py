@@ -52,7 +52,6 @@ def _is_convertible_to_float64(df: pd.DataFrame, column_name: str) -> bool:
 
 class ShapefileToSwiftConverter:
     """Converts shapefile data to SWIFT JSON catchment structure."""
-
     def __init__(
         self,
         gdf: gpd.GeoDataFrame,
@@ -60,6 +59,7 @@ class ShapefileToSwiftConverter:
         linkid_field: str = "LinkID",
         fromnodeid_field: str = "FromNodeID",
         tonodeid_field: str = "ToNodeID",
+        subareaid_field: str = "LinkID",
         spathlen_field: str = "SPathLen",
         darea_field: str = "DArea",
         geometry_field: str = "geometry",
@@ -75,6 +75,7 @@ class ShapefileToSwiftConverter:
             linkid_field: Name of the column containing Link IDs
             fromnodeid_field: Name of the column containing From Node IDs
             tonodeid_field: Name of the column containing To Node IDs
+            subareaid_field: Name of the column containing SubArea IDs (defaults to LinkID for backward compatibility)
             spathlen_field: Name of the column containing Stream Path Lengths (in meters)
             darea_field: Name of the column containing Subarea Drainage Area (in square meters)
             geometry_field: Name of the column containing geometry data
@@ -87,6 +88,7 @@ class ShapefileToSwiftConverter:
         self._linkid_field = linkid_field if linkid_field else _default_linkid_field
         self._fromnodeid_field = fromnodeid_field if fromnodeid_field else _default_fromnodeid_field
         self._tonodeid_field = tonodeid_field if tonodeid_field else _default_tonodeid_field
+        self._subareaid_field = subareaid_field if subareaid_field else _default_linkid_field  # NEW LINE
         self._spathlen_field = spathlen_field if spathlen_field else _default_spathlen_field
         self._darea_field = darea_field if darea_field else _default_darea_field
         self._geometry_field = geometry_field if geometry_field else _default_geometry_field
@@ -156,11 +158,18 @@ class ShapefileToSwiftConverter:
             self._geometry_field,
         ]
 
+        # Add subareaid_field if it's different from linkid_field
+        if self._subareaid_field != self._linkid_field and self._subareaid_field not in required_columns_names:
+            required_columns_names.append(self._subareaid_field)
+
         if set(required_columns_names).intersection(set(self.gdf.columns)) != set(required_columns_names):
             raise ValueError(f"The GeoDataFrame does not contain all the required columns: {required_columns_names}")
 
         # IDs should be strings, even if legacy are ints.
         self.gdf[self._linkid_field] = self.gdf[self._linkid_field].astype(str)
+        # Convert subareaid_field to string if it's different from linkid_field
+        if self._subareaid_field != self._linkid_field:
+            self.gdf[self._subareaid_field] = self.gdf[self._subareaid_field].astype(str)
         self.gdf[self._fromnodeid_field] = self.gdf[self._fromnodeid_field].astype(str)
         self.gdf[self._tonodeid_field] = self.gdf[self._tonodeid_field].astype(str)
 
@@ -286,13 +295,13 @@ class ShapefileToSwiftConverter:
         def subarea_name(row: pd.Series) -> str:
             if has_name_field:
                 return str(row[self._subarea_name_field])
-            return f"Subarea_{row[self._linkid_field]}"
+            return f"Subarea_{row[self._subareaid_field]}"
 
         for _, row in self.gdf.iterrows():
             if row[self._darea_field] > 0:
                 subarea = {
                     "AreaKm2": float(row[self._darea_field]) / 1_000_000,
-                    "ID": str(row[self._linkid_field]),
+                    "ID": str(row[self._subareaid_field]),
                     "LinkID": str(row[self._linkid_field]),
                     "Name": subarea_name(row),
                     "RunoffModel": self.runoff_model,

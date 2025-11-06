@@ -359,3 +359,58 @@ def test_element_names() -> None:
 
     # Assertions for custom subarea names
     assert all(subarea["Name"] == f"CustomSubAreaName_{int(subarea['ID']) - 1}" for subarea in result["SubAreas"])
+
+def test_custom_subareaid_field() -> None:
+    """Test conversion with custom subarea ID field different from LinkID."""
+    # Create test data with a custom SubAreaID column
+    data = {
+        "LinkID": [101, 102, 103],
+        "FromNodeID": [1, 2, 3],
+        "ToNodeID": [2, 3, 4],
+        "SubAreaID": ["SA_001", "SA_002", "SA_003"],  # Custom subarea identifiers
+        "SPathLen": [1000.0, 1500.0, 2000.0],
+        "DArea": [5000000.0, 3000000.0, 4000000.0],  # All have subareas
+        "geometry": [
+            LineString([(1.1, 1.2), (2.1, 2.2)]),
+            LineString([(2.1, 2.2), (3.1, 3.2)]),
+            LineString([(3.1, 3.2), (4.1, 4.2)]),
+        ],
+    }
+    gdf = gpd.GeoDataFrame(data)
+
+    # Create converter with custom subareaid_field
+    converter = ShapefileToSwiftConverter(gdf, subareaid_field="SubAreaID")
+    result = converter.convert()
+
+    # Test structure
+    assert len(result["Links"]) == 3
+    assert len(result["Nodes"]) == 4
+    assert len(result["SubAreas"]) == 3
+
+    # Test that links still use LinkID
+    link_ids = {link["ID"] for link in result["Links"]}
+    assert link_ids == {"101", "102", "103"}
+
+    # Test that subareas use the custom SubAreaID field
+    subarea_ids = {subarea["ID"] for subarea in result["SubAreas"]}
+    assert subarea_ids == {"SA_001", "SA_002", "SA_003"}
+
+    # Test that subareas are correctly linked to their links
+    for i, subarea in enumerate(result["SubAreas"]):
+        expected_link_id = str([101, 102, 103][i])
+        expected_subarea_id = ["SA_001", "SA_002", "SA_003"][i]
+        assert subarea["LinkID"] == expected_link_id
+        assert subarea["ID"] == expected_subarea_id
+        assert subarea["Name"] == f"Subarea_{expected_subarea_id}"
+
+    # Verify backward compatibility: test with default (subareaid_field="LinkID")
+    converter_default = ShapefileToSwiftConverter(gdf)
+    result_default = converter_default.convert()
+
+    # When using default, subareas should use LinkID field
+    subarea_ids_default = {subarea["ID"] for subarea in result_default["SubAreas"]}
+    assert subarea_ids_default == {"101", "102", "103"}
+
+def test_custom_linkid_field() -> None:
+    pass
+
